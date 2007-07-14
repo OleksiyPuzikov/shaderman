@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<node name="Phong Specular" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Phong illumination model - specular part</help>
+ <in>
+	<param name="SurfaceColor" type="color" default="color(0,0.5,1)" />
+	<param name="incandescence" type="color" default="color(0,0,0)" />
+	<param name="translucence" type="float" default="0" />
+	<param name="specularColor" type="color" default="color(0.5,0.5,0.5)" />
+	<param name="cosPower" type="float" default="20" />
+ </in>
+ <precode><![CDATA[
+ float k#;
+ 
+ normal Nf# = faceforward(normalize(N), I);
+ vector R# = reflect(normalize(I), Nf#);
+ 
+ color Itr# = 0;
+ if (${translucence} != 0) {
+  illuminance(P, Nf#, PI)
+   Itr# += Cl;
+   Itr# *= ${translucence};
+ }
+ 
+ color Is# = 0;
+ illuminance(P, Nf#, 1.57079632679) {
+  k# = log(normalize(L) . R#) * ${cosPower};
+  if (k# >= -12.5)
+  Is# += Cl * exp(k#);
+ }
+ Is# *= ${specularColor};
+]]></precode>
+<out>
+ <param type="color" name="color">${SurfaceColor} * (Itr# + Is# + ${incandescence})</param>
+</out>
+</node>

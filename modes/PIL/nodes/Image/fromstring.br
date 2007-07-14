@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<node name="Image.fromstring" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Load data to image from binary string</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="data" type="variant" default="None" />
+  <param name="decoder_name" type="variant" default="'raw'" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.fromstring(${data}, ${decoder_name})</param>
+</out>
+</node>
+

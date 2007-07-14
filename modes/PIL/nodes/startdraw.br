@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<node name="ImageDraw.Draw" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>PIL ImageDraw.Draw</help>
+ <in>
+	<param name="inp" type="variant" />
+	<param name="draw_operations" type="variant" />
+ </in>
+ <precode><![CDATA[
+import PIL.ImageDraw as ImageDraw
+
+im# = ${inp}
+
+draw# = ImageDraw.Draw(im#)
+draw#${draw_operations}
+]]></precode>
+ <out>
+	<param type="variant" name="outp">im#</param>
+</out>
+</node>

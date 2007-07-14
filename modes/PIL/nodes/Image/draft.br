@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<node name="Image.draft" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Configure image decoder</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="mode" type="variant" default="None" />
+  <param name="size" type="variant" default="None" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.draft(${mode}, ${size})</param>
+</out>
+</node>
+

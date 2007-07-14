@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<node name="Image.split" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Split image into bands</help>
+ <in>
+  <param name="inp" type="variant" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.split()</param>
+</out>
+</node>
+

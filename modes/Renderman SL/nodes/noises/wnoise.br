@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<!-- float f = freq * pow(2, scl);
+      // 1 layer(s): use 1 weight(s)
+      uniform float weights[1] = {w0};
+      result = wnoise(
+        f * P,
+        f * N,
+        "projectvector", QN,
+        "octaves", 1,
+        "lacunarity", lacunarity,
+        "weights", weights,
+        "distribution", distrib,
+        "amplitude", amp);
+      result += center; -->
+
+<node name="wnoise" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Wavelet noise</help>
+ <in>
+   <param name="P" type="point" default="P" />
+ </in>
+ <precode>
+  float fw# = max(sqrt(area(${P})), (2e-6));
+ </precode>
+ <out>
+	<param name="result" type="float">(wnoise(${P}, fw#))</param>
+ </out>
+</node>

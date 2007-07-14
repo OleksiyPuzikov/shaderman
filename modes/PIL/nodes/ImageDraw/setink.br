@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<node name="Image.setink" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>None</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="ink" type="variant" default="None" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.setink(${ink})</param>
+</out>
+</node>
+

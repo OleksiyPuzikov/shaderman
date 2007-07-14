@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<node name="Image.convert" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Convert to other pixel format</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="mode" type="variant" default="None" />
+  <param name="data" type="variant" default="None" />
+  <param name="dither" type="variant" default="None" />
+  <param name="palette" type="variant" default="0" />
+  <param name="colors" type="variant" default="256" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.convert(${mode}, ${data}, ${dither}, ${palette}, ${colors})</param>
+</out>
+</node>
+

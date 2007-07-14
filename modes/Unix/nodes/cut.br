@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<node name="Cut" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Cut</help>
+ <in>
+  <param name="params" type="variant" />
+ </in>
+ <out>
+  <param type="variant" name="outp">cut ${params}</param>
+</out>
+</node>
+

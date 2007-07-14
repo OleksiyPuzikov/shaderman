@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<node name="Image.transform" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Transform image</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="size" type="variant" default="None" />
+  <param name="method" type="variant" default="None" />
+  <param name="data" type="variant" default="None" />
+  <param name="resample" type="variant" default="0" />
+  <param name="fill" type="variant" default="1" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.transform(${size}, ${method}, ${data}, ${resample}, ${fill})</param>
+</out>
+</node>
+

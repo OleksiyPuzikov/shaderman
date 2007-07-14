@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<node name="Image.putpalette" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Put palette data into an image.</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="data" type="variant" default="None" />
+  <param name="rawmode" type="variant" default="'RGB'" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.putpalette(${data}, ${rawmode})</param>
+</out>
+</node>
+

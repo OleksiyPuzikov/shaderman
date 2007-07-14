@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<node name="Image.putalpha" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Set alpha layer</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="alpha" type="variant" default="None" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.putalpha(${alpha})</param>
+</out>
+</node>
+

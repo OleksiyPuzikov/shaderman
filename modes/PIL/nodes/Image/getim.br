@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<node name="Image.getim" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Get PyCObject pointer to internal image memory</help>
+ <in>
+  <param name="inp" type="variant" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.getim()</param>
+</out>
+</node>
+

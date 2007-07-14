@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<node name="head" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Head</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="params" type="variant" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp} | head ${params}</param>
+</out>
+</node>
+

@@ -1,0 +1,61 @@
+self.currentMode = "PIL"
+self.ActuallySwitchMode()
+
+node1 = node.Node(GetNextNodeID(), "modes/PIL/nodes/open.br", factory = self.factory)
+nodes.append(node1)
+node1.setInputDefault("filename", "'test.tif'")
+
+node2 = node.Node(GetNextNodeID(), "modes/PIL/nodes/save.br", factory = self.factory)
+nodes.append(node2)
+
+node3 = node.Node(GetNextNodeID(), "modes/PIL/nodes/Image/resize.br", factory = self.factory)
+nodes.append(node3)
+node3.setInputDefault("size", "(128, 128)")
+
+node4 = node.Node(GetNextNodeID(), "modes/PIL/nodes/Image/rotate.br", factory = self.factory)
+nodes.append(node4)
+node4.setInputDefault("angle", "45")
+
+pnl = NodePanel(self, 75, 141)
+panels.append(pnl)
+pnl.assignNode(node1)
+
+pnl = NodePanel(self, 529, 116)
+panels.append(pnl)
+pnl.assignNode(node2)
+
+pnl = NodePanel(self, 460, 323)
+panels.append(pnl)
+pnl.assignNode(node3)
+
+pnl = NodePanel(self, 255, 249)
+panels.append(pnl)
+pnl.assignNode(node4)
+
+connection1 = node.Connection(GetNextConnectionID())
+connections.append(connection1)
+connection1.assignInput(node1, "outp")
+connection1.assignOutput(node4, "inp")
+
+connection2 = node.Connection(GetNextConnectionID())
+connections.append(connection2)
+connection2.assignInput(node4, "outp")
+connection2.assignOutput(node3, "inp")
+
+connection3 = node.Connection(GetNextConnectionID())
+connections.append(connection3)
+connection3.assignInput(node3, "outp")
+connection3.assignOutput(node2, "inp")
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection1)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection2)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection3)
+

@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+
+<node name="SHW_Velvet Specular" author="Fredrik Gustafsson, original code written by Stephen H. Westin">
+ <help>SHW Velvet illumination model
+
+	An attempt at a velvet surface.
+	This phenomenological model 
+	contains three compnents a 
+	retroreflective lobe "back 
+	toward the light source" scattering 
+	near the horizon, regardless of 
+	incident direction a diffuse color.</help>
+ <in>
+	<param name="Sheen_Color" type="color" default="color(0.25,0.25,0.25)" />
+	<param name="roughness" type="float" default="0.1" />
+	<param name="backscatter" type="float" default="1" />
+	<param name="edginess" type="float" default="10" />
+	<param name="Surface_Color" type="color" default="color(0.0,0.5,1.0)" />
+ </in>
+ <precode><![CDATA[
+  normal Nf;                     /* Normalized normal vector */
+  vector V;                      /* Normalized eye vector */
+  vector H;                      /* Bisector vector for Phong/Blinn */
+  vector Ln;                     /* Normalized vector to light */
+  color shiny;                   /* Non-diffuse components */
+  float cosine, sine;            /* Components for horizon scatter */
+
+  Nf = faceforward (normalize(N), I);
+  V = -normalize (I);
+
+  shiny = 0;
+  illuminance ( P, Nf, 1.57079632679489661923 /* Hemisphere */ ) {
+    Ln = normalize ( L );
+    /* Retroreflective lobe */
+    cosine = max ( Ln.V, 0 );
+    shiny += pow ( cosine, 1.0/${roughness} ) * ${backscatter} * Cl * ${Sheen_Color};
+    /* Horizon scattering */
+    cosine = max ( Nf.V, 0 );
+    sine = sqrt (1.0-cosine*cosine);
+    shiny += pow ( sine, ${edginess} ) * Ln.Nf * Cl * ${Sheen_Color};
+  }
+]]></precode>
+<out>
+ <param type="color" name="color">shiny</param>
+</out>
+</node>

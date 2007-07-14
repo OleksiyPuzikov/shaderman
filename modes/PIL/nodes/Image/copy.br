@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<node name="Image.copy" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Copy raster data</help>
+ <in>
+  <param name="inp" type="variant" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.copy()</param>
+</out>
+</node>
+

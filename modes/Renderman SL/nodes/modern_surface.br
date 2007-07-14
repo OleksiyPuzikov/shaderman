@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+
+<node name="Modern Surface" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Modernized surface shader root</help>
+ <in>
+	<param name="Diffuse" type="color" default="1" />
+	<param name="Specular" type="color" default="0" />
+	<param name="Transparency" type="color" default="1" />
+	<param name="Displacement" type="vector" default="0" />
+	<param name="DisplacementK" type="float" default="1" />
+ </in>
+ <code>
+${header}
+surface ${shadername} (${shaderparams}) 
+{
+${precode}
+
+  normal Nf#;
+  point PP# = P;
+
+  Nf# = normalize( ntransform("shader", N) );
+  PP# += vtransform("shader", "current", ${DisplacementK} * ${Displacement} * vector Nf#);
+  N = calculatenormal(PP#);
+  P = PP#;
+
+Ci = ${Diffuse}+${Specular};
+Oi = ${Transparency};
+}
+ </code>
+</node>

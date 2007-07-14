@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<node name="history" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>History</help>
+ <in>
+  <param name="dummy" type="variant" />
+ </in>
+ <out>
+  <param type="variant" name="outp">history</param>
+</out>
+</node>
+

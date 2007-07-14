@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<node name="Image.point" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Map image through lookup table</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="lut" type="variant" default="None" />
+  <param name="mode" type="variant" default="None" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.point(${lut}, ${mode})</param>
+</out>
+</node>
+

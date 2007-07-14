@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<node name="Surface" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Surface shader root</help>
+ <in>
+	<param name="Ci" type="color" default="0" />
+	<param name="Oi" type="color" default="1" />
+ </in>
+ <code>
+${header}
+surface ${shadername} (${shaderparams}) 
+{
+${precode}
+
+Ci = ${Ci};
+Oi = ${Oi};
+}
+ </code>
+</node>

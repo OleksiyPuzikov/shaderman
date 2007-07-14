@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<node name="snoise" author="Simon Bunker, http://www.rendermania.com">
+ <help>signed noise - adapted from Peachey</help>
+ <in>
+	<param name="x" type="variant" default="P" />
+ </in>
+ <out>
+	<param name="result" type="float">(2*noise(${x})-1)</param>
+ </out>
+</node>

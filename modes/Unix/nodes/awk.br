@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<node name="awk" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>awk</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="code" type="variant" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp} | awk ${code}</param>
+</out>
+</node>
+

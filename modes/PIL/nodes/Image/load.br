@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<node name="Image.load" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Explicitly load pixel data.</help>
+ <in>
+  <param name="inp" type="variant" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.load()</param>
+</out>
+</node>
+

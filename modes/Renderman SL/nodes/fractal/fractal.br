@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<node name="Fractal" author="Konstantin Khatitonov">
+ <help>Basic fractal pattern</help>
+ <in>
+	<param name="PP" type="point" default="P" />
+ </in>
+<precode><![CDATA[
+ point temp_PP#=transform("shader",${PP});
+ uniform float i#;
+ float size#, sum#, area#;
+ sum# = 0;
+ size# = 1;
+ area# = sqrt(area(temp_PP#));
+ while(area#<size#)
+ {
+  sum# += size#*noise(temp_PP#/size#);
+  size# /= 2;
+ }
+]]></precode>
+ <out>
+	<param name="result" type="float">sum#</param>
+ </out>
+</node>

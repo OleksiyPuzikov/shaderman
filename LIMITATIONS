@@ -1,0 +1,14 @@
+ShaderMan.Next is new code, and some of it's parts are just not implemented or use simple stubs.
+Thus, the following list of limitations:
+
+  * OpenGL 2 support is required, specifically, non-power-of-two textures support. If your drivers doesn't support that, let me know.
+    I'm considering downgrading the code from OpenGL2 to OpenGL1.2 and ARB extension for NPOT textures. But it works for my Linux and Mac
+    boxes and on couple of Windows machines my co-workers have around.
+  * Generated output files are always named using test123.* pattern - this name is hardcoded for now.
+  * Unix mode is hardly functional except the example scene file - it's just here to show the possibilities of the tool
+    besides the usual code generation.
+  * Source code isn't really documented, however some important and tricky parts are.
+  * Node display font and colors are partially hardcoded
+  * Node zoom isn't implemented
+  * Auto-update of preview doesn't work when editing the parameters of node. Hovewer it works OK when you connect/disconnect nodes.
+  * Source code doesn't really adhere to PEP8 standards - I've mostly used the wxPython naming conventions and 8-spaces-tabulation.

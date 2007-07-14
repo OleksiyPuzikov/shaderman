@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<node name="Print" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Print result to console</help>
+ <in>
+  <param name="inp" type="variant" />
+ </in>
+ <code>${inp} </code>
+</node>
+

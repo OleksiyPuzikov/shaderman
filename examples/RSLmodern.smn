@@ -1,0 +1,58 @@
+self.currentMode = "Renderman SL"
+self.ActuallySwitchMode()
+
+node1 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/diffuse/lambert.br", factory = self.factory)
+nodes.append(node1)
+
+node2 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/specular/phong.br", factory = self.factory)
+nodes.append(node2)
+
+node3 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/modern_surface.br", factory = self.factory)
+nodes.append(node3)
+
+node4 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/khnoise.br", factory = self.factory)
+nodes.append(node4)
+
+pnl = NodePanel(self, 144, 262)
+panels.append(pnl)
+pnl.assignNode(node1)
+
+pnl = NodePanel(self, 146, 415)
+panels.append(pnl)
+pnl.assignNode(node2)
+
+pnl = NodePanel(self, 530, 358)
+panels.append(pnl)
+pnl.assignNode(node3)
+
+pnl = NodePanel(self, 154, 589)
+panels.append(pnl)
+pnl.assignNode(node4)
+
+connection1 = node.Connection(GetNextConnectionID())
+connections.append(connection1)
+connection1.assignInput(node1, "color")
+connection1.assignOutput(node3, "Diffuse")
+
+connection2 = node.Connection(GetNextConnectionID())
+connections.append(connection2)
+connection2.assignInput(node2, "color")
+connection2.assignOutput(node3, "Specular")
+
+connection3 = node.Connection(GetNextConnectionID())
+connections.append(connection3)
+connection3.assignInput(node4, "result")
+connection3.assignOutput(node3, "Displacement")
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection1)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection2)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection3)
+

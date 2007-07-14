@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+
+<node name="Image.save" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>PIL Image.save</help>
+ <in>
+	<param name="inp" type="variant" />
+	<param name="filename" type="variant" default="'out.tif'" />
+ </in>
+ <code>
+${header}
+
+${precode}
+
+${inp}.save(${filename})
+ </code>
+</node>

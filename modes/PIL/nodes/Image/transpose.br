@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<node name="Image.transpose" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Transpose image (flip or rotate in 90 degree steps)</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="method" type="variant" default="None" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.transpose(${method})</param>
+</out>
+</node>
+

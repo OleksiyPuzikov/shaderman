@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<node name="Image.paste" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Paste other image into region</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="im" type="variant" default="None" />
+  <param name="box" type="variant" default="None" />
+  <param name="mask" type="variant" default="None" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.paste(${im}, ${box}, ${mask})</param>
+</out>
+</node>
+

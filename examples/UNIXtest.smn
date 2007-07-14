@@ -1,0 +1,94 @@
+self.currentMode = "Unix"
+self.ActuallySwitchMode()
+
+node2 = node.Node(GetNextNodeID(), "modes/Unix/nodes/uniq.br", factory = self.factory)
+nodes.append(node2)
+node2.setInputDefault("params", "-c")
+
+node3 = node.Node(GetNextNodeID(), "modes/Unix/nodes/head.br", factory = self.factory)
+nodes.append(node3)
+node3.setInputDefault("params", "-n 30")
+
+node4 = node.Node(GetNextNodeID(), "modes/Unix/nodes/result.br", factory = self.factory)
+nodes.append(node4)
+
+node5 = node.Node(GetNextNodeID(), "modes/Unix/nodes/cut.br", factory = self.factory)
+nodes.append(node5)
+node5.setInputDefault("params", "-f1 -d" " ~/.bash_history")
+
+node6 = node.Node(GetNextNodeID(), "modes/Unix/nodes/sort.br", factory = self.factory)
+nodes.append(node6)
+
+node7 = node.Node(GetNextNodeID(), "modes/Unix/nodes/sort.br", factory = self.factory)
+nodes.append(node7)
+node7.setInputDefault("params", "-nr")
+
+pnl = NodePanel(self, 404, 236)
+panels.append(pnl)
+pnl.assignNode(node2)
+
+pnl = NodePanel(self, 789, 257)
+panels.append(pnl)
+pnl.assignNode(node3)
+
+pnl = NodePanel(self, 981, 263)
+panels.append(pnl)
+pnl.assignNode(node4)
+
+pnl = NodePanel(self, 20, 219)
+panels.append(pnl)
+pnl.assignNode(node5)
+
+pnl = NodePanel(self, 211, 227)
+panels.append(pnl)
+pnl.assignNode(node6)
+
+pnl = NodePanel(self, 589, 244)
+panels.append(pnl)
+pnl.assignNode(node7)
+
+connection3 = node.Connection(GetNextConnectionID())
+connections.append(connection3)
+connection3.assignInput(node3, "outp")
+connection3.assignOutput(node4, "inp")
+
+connection5 = node.Connection(GetNextConnectionID())
+connections.append(connection5)
+connection5.assignInput(node5, "outp")
+connection5.assignOutput(node6, "inp")
+
+connection6 = node.Connection(GetNextConnectionID())
+connections.append(connection6)
+connection6.assignInput(node6, "outp")
+connection6.assignOutput(node2, "inp")
+
+connection7 = node.Connection(GetNextConnectionID())
+connections.append(connection7)
+connection7.assignInput(node2, "outp")
+connection7.assignOutput(node7, "inp")
+
+connection8 = node.Connection(GetNextConnectionID())
+connections.append(connection8)
+connection8.assignInput(node7, "outp")
+connection8.assignOutput(node3, "inp")
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection3)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection5)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection6)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection7)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection8)
+

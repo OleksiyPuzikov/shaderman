@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<node name="Invert" author="Kharitonov Konstantin">
+ <help>Invert input parameter,it must be in range 0..1</help>
+ <in>
+	<param name="a" type="variant" default="1" />
+ </in>
+ <out>
+	<param name="result" type="variant">(1-${a})</param>
+ </out>
+</node>

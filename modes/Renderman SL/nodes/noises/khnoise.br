@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<node name="khNoise" author="Konstantin Khatitonov">
+ <help>simple snoise in "shader" space</help>
+ <in>
+	<param name="PP" type="point" default="point(0.0,0.0,0.0)" />
+	<param name="freq" type="float" default="10" />
+ </in>
+ <precode><![CDATA[
+
+ point temp_PP# = (${PP} == point(0.0,0.0,0.0)) ? P : ${PP};
+ temp_PP#=transform("shader", temp_PP#);
+ float temp_f# = 2.0*noise(temp_PP#*${freq})-1.0;
+
+ ]]></precode>
+ <out>
+	<param name="result" type="float">temp_f#</param>
+ </out>
+</node>

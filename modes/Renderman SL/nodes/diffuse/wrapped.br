@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+
+<node name="Wrapped Diffuse" author="zj">
+ <help>
+
+One shotcoming of the traditional lighting model is: diffuse falloff too fast. 
+Wrapped Diffuse Lighting model gave the light the ability to reach beyond the 90 degree point on the surface of objects, 
+producing softened light, as if simulating an area light. A few of directional lights is sufficient.
+Here is the float function used to vary a colorSpline according to the wrapped diffuse.
+
+ </help>
+
+ <in>
+	<param name="Kw" type="float" default="1" hint="Wrapped Angle - the highest angle/PI of point reached" />
+	<param name="Attenuation" type="float" default="1" />
+	<param name="SurfaceColor" type="color" default="color(1,1,1)" />
+ </in>
+ 
+ <out>
+	<param name="color" type="color">d#</param>
+ </out>
+ 
+<precode>
+ 		color d#;
+
+		color CLight = 0;
+
+		normal Nn = normalize (N);
+		float angle = radians(90 + WrapAngle);
+		vector Ln;
+		float wrap;
+		illuminance (P,N,PI)
+			{
+			   Ln = normalize (L);
+		    	   wrap = acos(Nn.Ln) / angle;
+			   wrap = 1 - min(1, wrap);
+			   CLight += Cl * wrap;
+			}
+	    	d# = SurfaceColor * Kd * CLight;
+</precode>
+</node>

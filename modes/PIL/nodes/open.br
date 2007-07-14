@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<node name="Image.open" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>PIL Image.open</help>
+ <in>
+	<param name="filename" type="variant" default="'input.tif'" />
+ </in>
+ <precode><![CDATA[
+import PIL.Image as Image
+
+f = open(${filename})
+
+im# = Image.open(f)
+]]></precode>
+ <out>
+	<param type="variant" name="outp">im#</param>
+</out>
+</node>

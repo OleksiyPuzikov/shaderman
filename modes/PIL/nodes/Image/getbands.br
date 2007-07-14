@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<node name="Image.getbands" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Get band names</help>
+ <in>
+  <param name="inp" type="variant" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.getbands()</param>
+</out>
+</node>
+

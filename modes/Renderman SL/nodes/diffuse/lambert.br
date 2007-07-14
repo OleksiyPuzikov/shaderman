@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<node name="Lambert" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Lambert illumination model</help>
+ <in>
+	<param name="SurfaceColor" type="color" default="color(0,0.5,1)" />
+	<param name="Kd" type="float" default="0.8" />
+	<param name="incandescence" type="color" default="color(0,0,0)" />
+	<param name="translucence" type="float" default="0" />
+ </in>
+ <precode><![CDATA[
+ normal Nf# = faceforward( normalize(N), I );
+ color Id# = ${Kd} * diffuse(Nf#);
+ 
+ color Itr# = 0;
+ if (${translucence} != 0) {
+  illuminance(P, Nf#, PI)
+  Itr# += Cl;
+  Itr# *= ${translucence};
+ }
+]]></precode>
+<out>
+ <param type="color" name="color">${SurfaceColor} * (Id# + Itr# + ${incandescence})</param>
+</out>
+</node>

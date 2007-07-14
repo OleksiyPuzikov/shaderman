@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<node name="Image.quantize" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>None</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="colors" type="variant" default="256" />
+  <param name="method" type="variant" default="0" />
+  <param name="kmeans" type="variant" default="0" />
+  <param name="palette" type="variant" default="None" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.quantize(${colors}, ${method}, ${kmeans}, ${palette})</param>
+</out>
+</node>
+

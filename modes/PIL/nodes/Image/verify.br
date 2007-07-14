@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<node name="Image.verify" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Verify file contents.</help>
+ <in>
+  <param name="inp" type="variant" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.verify()</param>
+</out>
+</node>
+

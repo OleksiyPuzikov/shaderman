@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<node name="fBm" author="Muigoan">
+ <help>fBm(P, octaves, lacunarity, gain)</help>
+ <in>
+	<param name="PP" type="point" default="P" />
+	<param name="octaves" type="float" default="4" />
+	<param name="lacunarity" type="float" default="2" />
+	<param name="gain" type="float" default="0.5" />
+ </in>
+ <header>
+ #define snoise(x) (2*noise(x)-1)
+ </header>
+<precode><![CDATA[
+	varying float sum# = 0, amp# = 1;
+	varying point pp# = ${PP};
+	uniform float i#;
+
+    for (i# = 0; i# < ${octaves}; i# += 1) {
+	sum# += amp# * snoise (pp#);
+	amp# *= ${gain};
+	pp# *= ${lacunarity};
+    }
+]]></precode>
+ <out>
+	<param name="result" type="float">sum#</param>
+ </out>
+</node>

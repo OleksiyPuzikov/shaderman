@@ -1,0 +1,55 @@
+node1 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/surface.br", factory = self.factory)
+nodes.append(node1)
+
+node2 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/diffuse/lambert.br", factory = self.factory)
+nodes.append(node2)
+
+node4 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/specular/phong.br", factory = self.factory)
+nodes.append(node4)
+
+node5 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
+nodes.append(node5)
+
+pnl = NodePanel(self, 413, 110)
+panels.append(pnl)
+pnl.assignNode(node1)
+
+pnl = NodePanel(self, 27, 136)
+panels.append(pnl)
+pnl.assignNode(node2)
+
+pnl = NodePanel(self, 55, 317)
+panels.append(pnl)
+pnl.assignNode(node4)
+
+pnl = NodePanel(self, 314, 277)
+panels.append(pnl)
+pnl.assignNode(node5)
+
+connection4 = node.Connection(GetNextConnectionID())
+connections.append(connection4)
+connection4.assignInput(node2, "color")
+connection4.assignOutput(node5, "a")
+
+connection5 = node.Connection(GetNextConnectionID())
+connections.append(connection5)
+connection5.assignInput(node4, "color")
+connection5.assignOutput(node5, "b")
+
+connection6 = node.Connection(GetNextConnectionID())
+connections.append(connection6)
+connection6.assignInput(node5, "result")
+connection6.assignOutput(node1, "Ci")
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection4)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection5)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection6)
+

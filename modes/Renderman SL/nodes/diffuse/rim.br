@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+
+<node name="RimDiffuse" author="Andrew Klishin. EMail: avk107@yahoo.com">
+ <help>Rim Diffuse shading model</help>
+ <in>
+	<param name="Kd" type="float" default="1" />
+	<param name="WrapAngle" type="float" default="0" hint="Makes sence when in [0..90]" />
+	<param name="SurfaceColor" type="color" default="color(1,1,1)" />
+ </in>
+ <precode><![CDATA[
+ 		color d#;
+
+		color CLight = 0;
+
+		normal Nn = normalize (N);
+		float angle = radians(90 + ${WrapAngle});
+		vector Ln;
+		float wrap;
+		illuminance (P,N,PI)
+			{
+			   Ln = normalize (L);
+		    	   wrap = acos(Nn.Ln) / angle;
+			   wrap = 1 - min(1, wrap);
+			   CLight += Cl * wrap;
+			}
+	    	d# = ${SurfaceColor} * ${Kd} * CLight;
+]]></precode>
+<out>
+ <param type="color" name="color">d#</param>
+</out>
+</node>

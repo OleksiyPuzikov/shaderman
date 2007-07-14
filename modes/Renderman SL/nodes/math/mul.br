@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<node name="Multiply" author="Simon Bunker, http://www.rendermania.com">
+ <help>a*b</help>
+ <in>
+	<param name="a" type="variant" default="1" />
+	<param name="b" type="variant" default="1" />
+ </in>
+ <out>
+	<param name="result" type="variant">(${a}*${b})</param>
+ </out>
+</node>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<node name="Image.getprojection" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Get projection to x and y axes</help>
+ <in>
+  <param name="inp" type="variant" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.getprojection()</param>
+</out>
+</node>
+

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<node name="Image.putdata" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Put data from a sequence object into an image.</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="data" type="variant" default="None" />
+  <param name="scale" type="variant" default="1.0" />
+  <param name="offset" type="variant" default="0.0" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.putdata(${data}, ${scale}, ${offset})</param>
+</out>
+</node>
+

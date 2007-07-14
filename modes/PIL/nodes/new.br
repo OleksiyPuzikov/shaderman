@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<node name="Image.new" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>PIL Image.new</help>
+ <in>
+	<param name="mode" type="string" default="'RGB'" />
+	<param name="size" type="variant" default="(720, 480)" />
+ </in>
+ <precode><![CDATA[
+import PIL.Image as Image
+
+im# = Image.new(${mode}, ${size})
+]]></precode>
+ <out>
+	<param type="variant" name="outp">im#</param>
+</out>
+</node>

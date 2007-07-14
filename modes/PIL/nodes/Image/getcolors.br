@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<node name="Image.getcolors" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Get colors from image, up to given limit</help>
+ <in>
+  <param name="inp" type="variant" />
+  <param name="maxcolors" type="variant" default="256" />
+ </in>
+ <out>
+  <param type="variant" name="outp">${inp}.getcolors(${maxcolors})</param>
+</out>
+</node>
+
