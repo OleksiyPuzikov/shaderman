@@ -25,10 +25,12 @@ def InitNodeDraw():
 	global lcolor
 	global hcolor
 	if wx.Platform == "__WXMAC__":
-		fontsize = 12
+		#fontsize = 12
+		fontsize = int(settings.get("fontsize", 12))
 		color = wx.Colour(220, 220, 220)
 	else:
-		fontsize = 10
+		#fontsize = 10
+		fontsize = int(settings.get("fontsize", 10))
 		color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
 		
 	color2 = settings.get("bgcolor", None)
