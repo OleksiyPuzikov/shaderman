@@ -127,6 +127,12 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	self.Bind(wx.EVT_MENU, self.OnMenuDeleteConnection, id=self.popupID1)
 	#self.Bind(wx.EVT_MENU, self.OnMenuDoNothing, id=self.popupID2)
 
+	self.popupID3 = wx.NewId()
+	self.popupID4 = wx.NewId()
+	self.popupID5 = wx.NewId()
+
+	self.Bind(wx.EVT_MENU, self.OnMenuSwitchParameters, id=self.popupID3)
+
 	# different menus for different places to click
 	
 	#pos = event.GetPosition()
@@ -134,9 +140,11 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	pos = self.ScreenToClient(pos)
 	x, y = pos
 	self.menuConnection = None
+	self.menuPanel = None
 	
 	for e in panels:
-		if (x > e.x) and (x < e.x+e.width) and (y > e.y) and (y < e.y+e.height):
+		if e.inside(x, y):
+			self.menuPanel = e
 			# There can be multiple outputs from the single out cell, so we don't support it now. Definitely will in the future, so TODO.
 			
 			#outtest = node_draw.IsArrowStart(e.node, wx.ClientDC(self), x, y)
@@ -151,11 +159,10 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 				pname = e.node.in_params[intest-1]["name"]
 				connection = e.node.in_connections.get(pname, None)
 				if (connection != None): # there's connection
-					self.menuConnection = connection
+					self.menuConnection = connection # we somehow need to pass the information on the selected connection outside...
 
+	menu = wx.Menu()
 	if (self.menuConnection != None):
-		menu = wx.Menu()
-		
 		item = wx.MenuItem(menu, self.popupID1, "Delete connection")
 		menu.AppendItem(item)
 		item.Enable(True)
@@ -166,9 +173,36 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 		menu.AppendItem(item)
 		item.Enable(False)
 	
-		self.PopupMenu(menu)
-		menu.Destroy()
-		self.Refresh(True)	
+	else: # we right-clicked inside node, but not on the connection end
+		item = wx.MenuItem(menu, -1, self.menuPanel.node.name)
+		menu.AppendItem(item)
+		item.Enable(False)
+		
+		menu.AppendSeparator()
+		
+		item = wx.MenuItem(menu, self.popupID3, "Show parameters", kind=wx.ITEM_CHECK)
+		menu.AppendItem(item)
+		item.Check(self.menuPanel.showParameters)
+		item.Enable(True)
+		
+		item = wx.MenuItem(menu, self.popupID4, "Show preview")
+		menu.AppendItem(item)
+		item.Enable(False) # TODO implement preview
+	
+		menu.AppendSeparator()
+		
+		item = wx.MenuItem(menu, self.popupID5, "Iconic mode")
+		menu.AppendItem(item)
+		item.Enable(False) # TODO implement iconic mode et al
+	
+	self.PopupMenu(menu)
+	menu.Destroy()
+	self.Refresh(True)
+		
+    def OnMenuSwitchParameters(self, event):
+	if self.menuPanel != None:
+		self.menuPanel.showParameters = event.Checked()
+		self.Refresh(True)
 		
     def ActuallyDeleteConnection(self, connection):
 	if connection != None:
@@ -203,7 +237,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
         x, y = self.CorrectPosition(event)#event.GetPosition()
 	
 	for p in panels:
-		if (x > p.x) and (x < p.x+p.width) and (y > p.y) and (y < p.y+p.height):
+		if p.inside(x, y):
 			node = p.node
 			
 			self.parent.pform.AssignNode(node)
@@ -256,7 +290,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 		self.temparrow = None
 			
 		for e in panels:
-			if (self.x > e.x) and (self.x < e.x+e.width) and (self.y > e.y) and (self.y < e.y+e.height):
+			if e.inside(self.x, self.y):
 				if -1 == node_draw.IsArrowStart(e.node, wx.ClientDC(self), self.x, self.y):
 					self.selected = e
 					dx = self.x - e.x
@@ -287,7 +321,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 		DropSuccessful = False
 		if self.temparrow != None:
 			for e in panels:
-				if (self.x > e.x) and (self.x < e.x+e.width) and (self.y > e.y) and (self.y < e.y+e.height): # TODO reimplement using range()
+				if e.inside(self.x, self.y):
 					stop = node_draw.IsArrowEnd(e.node, wx.ClientDC(self), self.x, self.y)
 					if -1 != stop:
 						self.stoppanel = e

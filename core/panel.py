@@ -33,6 +33,10 @@ class NodePanel:
 		self.node = None
 		self.owner = parent
 		
+		self.showParameters = True # this and following 3 might be a bit field; we'll see about it...
+		self.showPreview = False
+		self.iconicMode = False
+		
 	def assignNode(self, Node):
 		self.node = Node
 		Node.panel = self
@@ -51,12 +55,15 @@ class NodePanel:
 		self.width = width
 		self.height = height
 		
+	def inside(self, ax, ay):
+		return (ax in range(self.x, self.x+self.width)) and ((ay in range(self.y, self.y+self.height)))
+		
 	def paint(self):
 		if self in self.owner.c.markedPanels:
 		 	glDisable(GL_TEXTURE_2D) # to ensure the image isn't "color corrected" by texture :)
-			glColor4f( 248/255.0, 206/255.0, 36/255.0, 0.5 ) 
+			glColor4f( 248/255.0, 206/255.0, 36/255.0, 0.5 ) # hardcoded selection color
 	
-			selectionBorder = 5
+			selectionBorder = 5 # ... and size
 			glBegin( GL_QUADS )
 			
 			glVertex2i( self.x-selectionBorder, self.y-selectionBorder )

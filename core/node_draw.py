@@ -17,7 +17,7 @@ lcolor = None
 hcolor = None
 
 # should be Factory/function ?
-TypeColors = { "float" : wx.RED, "color" : wx.GREEN, "string" : wx.BLUE, "variant" : wx.BLACK, "point" : wx.CYAN, "vector" : wx.CYAN, "normal" : wx.CYAN } 
+TypeColors = { "float" : wx.RED, "color" : wx.GREEN, "string" : wx.BLUE, "variant" : wx.BLACK, "point" : wx.CYAN, "vector" : wx.CYAN, "normal" : wx.CYAN }
 
 def InitNodeDraw():
 	global fontsize
@@ -74,8 +74,7 @@ def CalcMinMaxSize(node, dc):
 		width1 = max(widths)
 	else:
 		width1 = 0
-	#width1 = max(widths)
-	
+
 	extents = [ dc.GetFullTextExtent(str(inp["name"])) for inp in node.out_params ]
 	widths = [ extent[0] for extent in extents ]
 	if len(widths)>0:
