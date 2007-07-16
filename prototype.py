@@ -42,6 +42,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	self.markedPanels = []
 
 	self.panx = self.pany = 0
+	self.zoom = 1
 	
 	self.mx = self.my = self.mlastx = self.mlasty = 0 # for middle mouse click; TODO for Mac users, panning with Shift-LeftMouse
 	
@@ -57,7 +58,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
         self.Bind(wx.EVT_LEFT_UP, self.OnMouseUp)
         self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
-	#self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel) # TODO implement zoom
+	#self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel) # Zoom is partially implemented, but I don't like it.
 
         self.Bind(wx.EVT_MIDDLE_DOWN, self.OnMiddleMouseDown)
         self.Bind(wx.EVT_MIDDLE_UP, self.OnMiddleMouseUp)
@@ -81,13 +82,14 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 
     def OnMouseWheel(self, event):
 	zoomFactor = event.GetWheelRotation() / event.GetWheelDelta()
-	
+
 	if zoomFactor > 0:
-		self.zoom(1.0/zoomFactor)
+		self.doZoom(1.0/zoomFactor)
 	elif zoomFactor < 0:
-		self.zoom(zoomFactor)
+		self.doZoom(zoomFactor)
 		
-    def zoom(self, factor): # TODO implement canvas zoom
+    def doZoom(self, factor): # TODO implement canvas zoom
+	self.zoom += factor*0.05
 	self.InitGL()
 	self.Refresh(False)
 
@@ -383,6 +385,8 @@ class NodeCanvas(NodeCanvasBase):
 	glLoadIdentity()
 	#glOrtho( 0.0, self.size.width, self.size.height, 0.0,  -1.0, 1.0 )
 	glOrtho( 0.0+self.panx, self.size.width+self.panx, self.size.height+self.pany, 0.0+self.pany, -1.0, 1.0 )
+	#print self.zoom
+	glScalef( self.zoom, self.zoom, 1 )
 
   	glMatrixMode( GL_MODELVIEW )
 	glLoadIdentity()
@@ -602,19 +606,21 @@ class MainFrame(wx.Frame):
 	self.tree.SetPyData(self.root, root)
 	
 	for (dirpath, dirnames, filenames) in os.walk(root):
-		for dirname in dirnames:
-			fullpath = os.path.join(dirpath, dirname)
-			self.treeids[fullpath] = self.tree.AppendItem(self.treeids[dirpath], dirname)
-			self.tree.SetPyData(self.treeids[fullpath], fullpath)
-			self.tree.SetItemImage(self.treeids[fullpath], self.fldridx, wx.TreeItemIcon_Normal)
-			self.tree.SetItemImage(self.treeids[fullpath], self.fldropenidx, wx.TreeItemIcon_Selected)
-		#for filename in sorted(filenames): # removed for Python 2.3 compatibility
-		for filename in filenames:
-			if filename.endswith(".br"):
-				i = self.tree.AppendItem(self.treeids[dirpath], filename.replace(".br", ""))
-				self.tree.SetPyData(i, "%s%s%s" % (dirpath, os.path.sep, filename))
-				self.tree.SetItemImage(i, self.fileidx, wx.TreeItemIcon_Normal)
-				self.tree.SetItemImage(i, self.fileidx, wx.TreeItemIcon_Selected)
+		if dirpath.find(".svn") == -1:
+			for dirname in dirnames:
+				if dirname.find(".svn") == -1:
+					fullpath = os.path.join(dirpath, dirname)
+					self.treeids[fullpath] = self.tree.AppendItem(self.treeids[dirpath], dirname)
+					self.tree.SetPyData(self.treeids[fullpath], fullpath)
+					self.tree.SetItemImage(self.treeids[fullpath], self.fldridx, wx.TreeItemIcon_Normal)
+					self.tree.SetItemImage(self.treeids[fullpath], self.fldropenidx, wx.TreeItemIcon_Selected)
+			#for filename in sorted(filenames): # removed for Python 2.3 compatibility
+			for filename in filenames:
+				if filename.endswith(".br"):
+					i = self.tree.AppendItem(self.treeids[dirpath], filename.replace(".br", ""))
+					self.tree.SetPyData(i, "%s%s%s" % (dirpath, os.path.sep, filename))
+					self.tree.SetItemImage(i, self.fileidx, wx.TreeItemIcon_Normal)
+					self.tree.SetItemImage(i, self.fileidx, wx.TreeItemIcon_Selected)
 
         try:
 		self.tree.Expand(self.root)
