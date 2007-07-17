@@ -64,34 +64,41 @@ def CalcMinMaxSize(node, dc):
 	headerh = dc.GetCharHeight()+6
 	dh = (headerh-dc.GetFullTextExtent(node.name)[1])/2
 	
-	height = headerh * itemcount
+	if node.panel.showParameters:
+		height = headerh * itemcount
+	else:
+		height = headerh
 	
 	width = headerh*4
 	
-	extents = [ dc.GetFullTextExtent(str(inp["name"])) for inp in node.in_params ]
-	widths = [ extent[0] for extent in extents ]
-	if len(widths)>0:
-		width1 = max(widths)
-	else:
-		width1 = 0
+	width1 = 0
+	if node.panel.showParameters:
+		extents = [ dc.GetFullTextExtent(str(inp["name"])) for inp in node.in_params ]
+		widths = [ extent[0] for extent in extents ]
+		if len(widths)>0:
+			width1 = max(widths)
 
-	extents = [ dc.GetFullTextExtent(str(inp["name"])) for inp in node.out_params ]
-	widths = [ extent[0] for extent in extents ]
-	if len(widths)>0:
-		width2 = max(widths)
-	else:
-		width2 = 0
+	width2 = 0
+	if node.panel.showParameters:
+		extents = [ dc.GetFullTextExtent(str(inp["name"])) for inp in node.out_params ]
+		widths = [ extent[0] for extent in extents ]
+		if len(widths)>0:
+			width2 = max(widths)
 	
 	width += max(width1+width2, dc.GetFullTextExtent(str(node.name))[0])
 	
 	return width, height, headerh, dh, width1, width2
 	
-def CalcArrowPosition(index, dc):
+def CalcArrowPosition(index, dc, node=None):
 	font = wx.Font(fontsize, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
 	dc.SetFont(font)
 	
 	headerh = dc.GetCharHeight()+6
-	return headerh * (index+1) + headerh/2 # because of header; beware of the preview placement!!!
+	result = headerh * (index+1) + headerh/2 # because of header; beware of the preview placement!!!
+	if node != None:
+		if not node.panel.showParameters:
+			result = headerh/2
+	return result
 
 def IsArrowStart(anode, dc, x, y):
 	width, height, headerh, dh, col1, col2 = CalcMinMaxSize(anode, dc)

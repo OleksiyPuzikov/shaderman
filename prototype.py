@@ -202,6 +202,15 @@ class NodeCanvasBase(glcanvas.GLCanvas):
     def OnMenuSwitchParameters(self, event):
 	if self.menuPanel != None:
 		self.menuPanel.showParameters = event.Checked()
+		self.menuPanel.refreshFont()
+
+		for c in self.menuPanel.node.in_connections.itervalues():
+			c.arrow.refreshFont()
+		
+		for c in self.menuPanel.node.out_connections.itervalues():
+			for c2 in c:
+				c2.arrow.refreshFont()
+			
 		self.Refresh(True)
 		
     def ActuallyDeleteConnection(self, connection):

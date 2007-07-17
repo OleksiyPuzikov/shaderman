@@ -124,6 +124,7 @@ class Arrow:
 	
 	def assignConnection(self, Connection):
 		self.connection = Connection
+		Connection.arrow = self
 		
 		inpn = self.connection.inputNode
 		outn = self.connection.outputNode
@@ -151,8 +152,8 @@ class Arrow:
 		return """arr = Arrow(self)\narrows.append(arr)\narr.assignConnection(connection%s)\n""" % (self.connection.id)
 		
 	def refreshFont(self):
-		self.hoffset1 = node_draw.CalcArrowPosition(self.idx1, wx.ClientDC(self.owner))
-		self.hoffset2 = node_draw.CalcArrowPosition(self.idx2, wx.ClientDC(self.owner))
+		self.hoffset1 = node_draw.CalcArrowPosition(self.idx1, wx.ClientDC(self.owner), self.connection.inputNode)
+		self.hoffset2 = node_draw.CalcArrowPosition(self.idx2, wx.ClientDC(self.owner), self.connection.outputNode)
 	
 	def paint(self):
 		if self.connection != None:

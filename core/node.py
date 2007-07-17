@@ -43,6 +43,7 @@ class Connection:
 		self.inputName = ""
 		self.outputNode = None
 		self.outputName = ""
+		self.arrow = None
 		
 	def assignInput(self, inputNode, inputName):
 		self.inputNode = inputNode
