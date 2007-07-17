@@ -1,3 +1,6 @@
+self.currentMode = "Renderman SL"
+self.ActuallySwitchMode()
+
 node1 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/surface.br", factory = self.factory)
 nodes.append(node1)
 
