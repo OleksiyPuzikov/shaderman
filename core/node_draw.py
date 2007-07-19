@@ -108,8 +108,8 @@ def IsArrowStart(anode, dc, x, y):
 	yy = y-anode.panel.y
 		
 	for i in range(1, len(anode.out_params)+1):
-		if (xx > width-dh-ahh) and (xx < width-dh) and (yy > i*headerh+dh) and (yy < i*headerh+dh+ahh):
-			return i	
+		if (xx in range(col1+headerh*2+2, width)) and (yy in range(i*headerh, (i+1)*headerh)):
+			return i
 				
 	return -1
 	
@@ -121,7 +121,7 @@ def IsArrowEnd(anode, dc, x, y):
 	yy = y-anode.panel.y
 		
 	for i in range(1, len(anode.in_params)+1):
-		if (xx > dh) and (xx < dh+ahh) and (yy > i*headerh+dh) and (yy < i*headerh+dh+ahh):
+		if (xx in range(0, col1)) and (yy in range(i*headerh, (i+1)*headerh)):
 			return i	
 				
 	return -1
