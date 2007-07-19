@@ -274,6 +274,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
     def OnMouseDown(self, event):
 		self.CaptureMouse()
 		self.x, self.y = self.lastx, self.lasty = self.CorrectPosition(event)#event.GetPosition()
+		self.mx, self.my = event.GetPosition()
 		
 		self.insidePreview = self.CoordinateInsidePreview(self.x, self.y)
 		if self.insidePreview: # code duplication alert :) see the OnMouseMove
@@ -369,6 +370,15 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 		self.Refresh(False)
 
     def OnMouseMotion(self, event):
+		if event.Dragging() and (event.MiddleIsDown() or (event.LeftIsDown() and event.AltDown())):
+			self.mlastx, self.mlasty = self.mx, self.my
+			self.mx, self.my = event.GetPosition()
+			self.panx += self.mlastx-self.mx
+			self.pany += self.mlasty-self.my
+			self.InitGL()
+			self.Refresh(False)
+			return	
+	
 		if event.Dragging() and event.LeftIsDown():
 			self.lastx, self.lasty = self.x, self.y
 			self.x, self.y = self.CorrectPosition(event)#event.GetPosition()
@@ -390,15 +400,6 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 				self.InitGL()
 				self.Refresh(False)
 				return
-			
-		if event.Dragging() and event.MiddleIsDown():
-			self.mlastx, self.mlasty = self.mx, self.my
-			self.mx, self.my = event.GetPosition()
-			self.panx += self.mlastx-self.mx
-			self.pany += self.mlasty-self.my
-			self.InitGL()
-			self.Refresh(False)
-			return
 			
 		if self.selected != None:
 			self.selected.x = self.x-self.selected.delta[0]
