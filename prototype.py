@@ -174,29 +174,34 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 		item.Enable(False)
 	
 	else: # we right-clicked inside node, but not on the connection end
-		item = wx.MenuItem(menu, -1, self.menuPanel.node.name)
-		menu.AppendItem(item)
-		item.Enable(False)
+		if self.menuPanel != None: # we've got the panel selected, so we show it's menu
+			item = wx.MenuItem(menu, -1, self.menuPanel.node.name)
+			menu.AppendItem(item)
+			item.Enable(False)
 		
-		menu.AppendSeparator()
+			menu.AppendSeparator()
 		
-		item = wx.MenuItem(menu, self.popupID3, "Show parameters", kind=wx.ITEM_CHECK)
-		menu.AppendItem(item)
-		item.Check(self.menuPanel.showParameters)
-		item.Enable(True)
+			item = wx.MenuItem(menu, self.popupID3, "Show parameters", kind=wx.ITEM_CHECK)
+			menu.AppendItem(item)
+			item.Check(self.menuPanel.showParameters)
+			item.Enable(True)
 		
-		item = wx.MenuItem(menu, self.popupID4, "Show preview")
-		menu.AppendItem(item)
-		item.Enable(False) # TODO implement preview
+			item = wx.MenuItem(menu, self.popupID4, "Show preview")
+			menu.AppendItem(item)
+			item.Enable(False) # TODO implement preview
 	
-		menu.AppendSeparator()
+			menu.AppendSeparator()
 		
-		item = wx.MenuItem(menu, self.popupID5, "Iconic mode")
-		menu.AppendItem(item)
-		item.Enable(False) # TODO implement iconic mode et al
-	
+			item = wx.MenuItem(menu, self.popupID5, "Iconic mode")
+			menu.AppendItem(item)
+			item.Enable(False) # TODO implement iconic mode et al
+		else:
+			#pass # should show the brick menu here instead
+			menu = self.parent.brickMenu
+				
 	self.PopupMenu(menu)
-	menu.Destroy()
+	if menu is not self.parent.brickMenu:
+		menu.Destroy()
 	self.Refresh(True)
 		
     def OnMenuSwitchParameters(self, event):
@@ -263,11 +268,11 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	xw23 = xw*2/3
 	yw23 = yw*2/3
 	
-	x1 = offx+(self.maxsize[0]-xw23)/20
-	x2 = offx+(self.maxsize[2]-xw23)/20
+	x1 = offx+(self.maxsize[0]-xw23)/30
+	x2 = offx+(self.maxsize[2]-xw23)/30
 	
-	y1 = offy+(self.maxsize[1]-yw23)/20
-	y2 = offy+(self.maxsize[3]-yw23)/20
+	y1 = offy+(self.maxsize[1]-yw23)/30
+	y2 = offy+(self.maxsize[3]-yw23)/30
 
 	return (x in range(x1, x2)) and ((y in range(y1, y2))) # BTW, this only works with integers :)
 
@@ -285,8 +290,8 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 			yw23 = (self.maxsize[3]-self.maxsize[1])*2/3
 			
 			dx, dy = self.CorrectPosition(event)
-			dx = (dx - offx)*20+xw23
-			dy = (dy - offy)*20+yw23
+			dx = (dx - offx)*30+xw23
+			dy = (dy - offy)*30+yw23
 			
 			self.panx = dx
 			self.pany = dy
@@ -391,8 +396,8 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 				yw23 = (self.maxsize[3]-self.maxsize[1])*2/3
 				
 				dx, dy = self.CorrectPosition(event)
-				dx = (dx - offx)*20+xw23
-				dy = (dy - offy)*20+yw23
+				dx = (dx - offx)*30+xw23
+				dy = (dy - offy)*30+yw23
 				
 				self.panx = dx
 				self.pany = dy
@@ -491,27 +496,27 @@ class NodeCanvas(NodeCanvasBase):
 
 	glColor4f(0.4, 0.4, 0.4, 0.2)        # total view
 	glBegin(GL_POLYGON)
-	glVertex2i( offx+(self.maxsize[0]-xw23)/20, offy+(self.maxsize[1]-yw23)/20 )
-	glVertex2i( offx+(self.maxsize[0]-xw23)/20, offy+(self.maxsize[3]-yw23)/20 )
-	glVertex2i( offx+(self.maxsize[2]-xw23)/20, offy+(self.maxsize[3]-yw23)/20 )
-	glVertex2i( offx+(self.maxsize[2]-xw23)/20, offy+(self.maxsize[1]-yw23)/20 )
+	glVertex2i( offx+(self.maxsize[0]-xw23)/30, offy+(self.maxsize[1]-yw23)/30 )
+	glVertex2i( offx+(self.maxsize[0]-xw23)/30, offy+(self.maxsize[3]-yw23)/30 )
+	glVertex2i( offx+(self.maxsize[2]-xw23)/30, offy+(self.maxsize[3]-yw23)/30 )
+	glVertex2i( offx+(self.maxsize[2]-xw23)/30, offy+(self.maxsize[1]-yw23)/30 )
 	glEnd()
 	
 	glColor4f(0.4, 0.4, 0.4, 0.4) # current view
 	glBegin(GL_POLYGON)
-	glVertex2i( offx+(self.panx-xw23)/20, offy+(self.pany-yw23)/20 )
-	glVertex2i( offx+(self.panx-xw23)/20, offy+(offy-yw23)/20 )
-	glVertex2i( offx+(offx-xw23)/20, offy+(offy-yw23)/20 )
-	glVertex2i( offx+(offx-xw23)/20, offy+(self.pany-yw23)/20 )
+	glVertex2i( offx+(self.panx-xw23)/30, offy+(self.pany-yw23)/30 )
+	glVertex2i( offx+(self.panx-xw23)/30, offy+(offy-yw23)/30 )
+	glVertex2i( offx+(offx-xw23)/30, offy+(offy-yw23)/30 )
+	glVertex2i( offx+(offx-xw23)/30, offy+(self.pany-yw23)/30 )
 	glEnd()
 	
 	glColor4f(0.4, 0.4, 0.4, 0.8) # bricks
 	for p in panels:
 		glBegin(GL_POLYGON)
-		glVertex2i( offx+(p.x-xw23)/20, offy+(p.y-yw23)/20 )
-		glVertex2i( offx+(p.x-xw23)/20, offy+(p.y+p.height-yw23)/20 )
-		glVertex2i( offx+(p.x+p.width-xw23)/20, offy+(p.y+p.height-yw23)/20 )
-		glVertex2i( offx+(p.x+p.width-xw23)/20, offy+(p.y-yw23)/20 )
+		glVertex2i( offx+(p.x-xw23)/30, offy+(p.y-yw23)/30 )
+		glVertex2i( offx+(p.x-xw23)/30, offy+(p.y+p.height-yw23)/30 )
+		glVertex2i( offx+(p.x+p.width-xw23)/30, offy+(p.y+p.height-yw23)/30 )
+		glVertex2i( offx+(p.x+p.width-xw23)/30, offy+(p.y-yw23)/30 )
 		glEnd()
 
 	glColor4f(0.4, 0.4, 0.4, 1.0)
@@ -572,6 +577,9 @@ class MainFrame(wx.Frame):
 	self.ID_MODEPREFERENCES = wx.NewId()
 	
 	self.modeMenus = {}
+	
+	self.brickMenu = None
+	self.brickMenuArr = {}
 	
 	self.currentMode = "Renderman SL" # should load from the settings
         self._setMenu()
@@ -642,8 +650,19 @@ class MainFrame(wx.Frame):
 			
 	root = opj('%s/modes/%s/nodes' % (os.getcwd(), self.currentMode))
 	
+	if self.brickMenu != None:
+		del self.brickMenu
+		
+	self.brickMenu = wx.Menu()
+	item = wx.MenuItem(self.brickMenu, -1, "Nodes")
+	self.brickMenu.AppendItem(item)
+	item.Enable(False)
+	self.brickMenu.AppendSeparator()
+	
 	self.tree.Freeze()
 	self.tree.DeleteAllItems()
+	
+	self.brickMenuArr.clear()
 	
 	self.treeids = {root : self.tree.AddRoot(root)}
 	self.root = self.treeids[root]
@@ -659,12 +678,25 @@ class MainFrame(wx.Frame):
 					self.tree.SetItemImage(self.treeids[fullpath], self.fldridx, wx.TreeItemIcon_Normal)
 					self.tree.SetItemImage(self.treeids[fullpath], self.fldropenidx, wx.TreeItemIcon_Selected)
 			#for filename in sorted(filenames): # removed for Python 2.3 compatibility
+			
+			fmenu = wx.Menu()
+			
 			for filename in filenames:
 				if filename.endswith(".br"):
 					i = self.tree.AppendItem(self.treeids[dirpath], filename.replace(".br", ""))
 					self.tree.SetPyData(i, "%s%s%s" % (dirpath, os.path.sep, filename))
 					self.tree.SetItemImage(i, self.fileidx, wx.TreeItemIcon_Normal)
 					self.tree.SetItemImage(i, self.fileidx, wx.TreeItemIcon_Selected)
+					nid = wx.NewId()
+					if dirpath==root:
+						self.brickMenu.Append(nid, filename.replace(".br", ""))
+					else:
+						fmenu.Append(nid, filename.replace(".br", ""))
+					self.brickMenuArr[nid] = os.path.join(dirpath, filename)
+					self.Bind(wx.EVT_MENU, self.OnNewBrickContextMenu, id=nid)
+			
+			if dirpath!=root:		
+				self.brickMenu.AppendMenu(-1, dirpath.replace(root+os.path.sep, ""), fmenu)
 
         try:
 		self.tree.Expand(self.root)
@@ -673,6 +705,20 @@ class MainFrame(wx.Frame):
 		
 	self.tree.Thaw()
 	self.tree.Refresh(True)
+
+    def OnNewBrickContextMenu(self, event):
+	newname = self.brickMenuArr[event.GetId()]
+	
+	node1 = node.Node(GetNextNodeID(), newname, factory = self.factory)
+	nodes.append(node1)
+		
+	pnl = NodePanel(self, x = 20 + self.c.panx, y = 20 + self.c.pany)
+	panels.append(pnl)
+		
+	pnl.assignNode(node1)
+	self.c.Refresh(False)
+
+	#event.Skip()
 
     def _setMenu(self):
         self.mainmenu = wx.MenuBar()
@@ -813,7 +859,6 @@ class MainFrame(wx.Frame):
 	pass
 
     def OnSwitchMode(self, event):
-        event.Skip()
 	self.currentMode = self.modeMenus[event.GetId()].GetLabel()
 	self.ActuallySwitchMode()
 	self.OnNewDocument(None)
