@@ -523,6 +523,36 @@ class NodeCanvas(NodeCanvasBase):
 
         self.SwapBuffers()
 
+class CanvasDropTarget(wx.PyDropTarget):
+    def __init__(self, window):
+        wx.PyDropTarget.__init__(self)
+        self.window = window
+
+        self.df = wx.CustomDataFormat("CanvasDropTarget")
+        self.data = wx.CustomDataObject(self.df)
+        self.SetDataObject(self.data)
+
+    def OnEnter(self, x, y, d):
+        return d
+
+    def OnLeave(self):
+        pass
+
+    def OnDrop(self, x, y):
+        return True
+
+    def OnDragOver(self, x, y, d):
+        return d
+
+    def OnData(self, x, y, d):
+        if self.GetData():
+            data = self.data.GetData()
+            if data == "wxTreeCtrl":
+                win = self.window.OnTreeLeftDClick(None)
+                win.x = x
+		win.y = y
+        return d
+
 class MainFrame(wx.Frame):
     
     def __init__(self, parent, title):
@@ -616,6 +646,24 @@ class MainFrame(wx.Frame):
 	self.Bind(wx.EVT_MOVE, self.OnMove)
         self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
 	self.Bind(wx.EVT_WINDOW_DESTROY, self.OnCleanup)
+	
+	self.tree.Bind(wx.EVT_TREE_BEGIN_DRAG, self._startDrag)
+        
+	dt = CanvasDropTarget(self)
+        self.c.SetDropTarget(dt)
+	
+    def _startDrag(self, event):
+	    
+        button = event.GetEventObject()
+        item = event.GetItem()
+        tree = event.GetEventObject()
+
+        df = wx.CustomDataFormat("CanvasDropTarget")
+        ldata = wx.CustomDataObject(df)
+        ldata.SetData(str(button.GetName()))
+        dropSource = wx.DropSource(self)
+        dropSource.SetData(ldata)
+        result = dropSource.DoDragDrop(True)
 	
     def OnSMouseDown(self, evt):
         self.dividerPanel.CaptureMouse()
@@ -987,7 +1035,10 @@ class MainFrame(wx.Frame):
 		pnl.assignNode(node1)
 		self.c.Refresh(False)
 
-	event.Skip()
+	if event != None:
+		event.Skip()
+	
+	return pnl
 	
     def OnEraseBackground(self, event):
         pass # Do nothing, to avoid flashing on MSW.
