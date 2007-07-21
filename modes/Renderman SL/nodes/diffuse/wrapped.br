@@ -12,7 +12,7 @@ Here is the float function used to vary a colorSpline according to the wrapped d
 
  <in>
 	<param name="Kw" type="float" default="1" hint="Wrapped Angle - the highest angle/PI of point reached" />
-	<param name="Attenuation" type="float" default="1" />
+	<param name="Kd" type="float" default="0.8" />
 	<param name="SurfaceColor" type="color" default="color(1,1,1)" />
  </in>
  
@@ -26,7 +26,7 @@ Here is the float function used to vary a colorSpline according to the wrapped d
 		color CLight = 0;
 
 		normal Nn = normalize (N);
-		float angle = radians(90 + WrapAngle);
+		float angle = radians(90 + ${Kw});
 		vector Ln;
 		float wrap;
 		illuminance (P,N,PI)
@@ -36,6 +36,6 @@ Here is the float function used to vary a colorSpline according to the wrapped d
 			   wrap = 1 - min(1, wrap);
 			   CLight += Cl * wrap;
 			}
-	    	d# = SurfaceColor * Kd * CLight;
+	    	d# = ${SurfaceColor} * ${Kd} * CLight;
 </precode>
 </node>
