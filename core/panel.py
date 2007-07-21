@@ -21,7 +21,7 @@ except ImportError:
 	sys.exit(1)
 
 class NodePanel:
-	def __init__(self, parent, x=100, y=100):
+	def __init__(self, parent, x=100, y=100, showParameters = True):
 		self.x = x
 		self.y = y
 		
@@ -33,7 +33,7 @@ class NodePanel:
 		self.node = None
 		self.owner = parent
 		
-		self.showParameters = True # this and following 3 might be a bit field; we'll see about it...
+		self.showParameters = showParameters # this and following 3 might be a bit field; we'll see about it...
 		self.showPreview = False
 		self.iconicMode = False
 		
@@ -47,7 +47,8 @@ class NodePanel:
 		self.height = height
 		
 	def SaveState(self):
-		return """pnl = NodePanel(self, %d, %d)\npanels.append(pnl)\npnl.assignNode(node%s)\n""" % (self.x, self.y, self.node.id)
+		s = """pnl = NodePanel(self, %d, %d, %s)\npanels.append(pnl)\npnl.assignNode(node%s)\n""" % (self.x, self.y,  str(self.showParameters), self.node.id)
+		return s
 		
 	def refreshFont(self):
 		width, height, headerh, dh, col1, col2 = node_draw.CalcMinMaxSize(self.node, wx.ClientDC(self.owner))
