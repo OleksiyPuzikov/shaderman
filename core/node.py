@@ -78,6 +78,9 @@ class Node:
 		self.precode = ""
 		self.header = ""
 		
+		self.codebackup = "" # this one for the case when somebody will edit the code using UI
+		self.precodebackup = ""
+		
 		self.factory = factory
 		
 		self.panel = None
@@ -100,6 +103,10 @@ class Node:
 		for i in self.in_params:
 			if i["backup"] != i["default"]:
 				s += """node%s.setInputDefault("%s", "%s")\n""" % (self.id, i["name"], i["default"])
+		if self.code != self.codebackup:
+			s += "node%s.code = \"\"\"%s\"\"\"\n" % (self.id, self.code)
+		if self.precode != self.precodebackup:
+			s += "node%s.precode = \"\"\"%s\"\"\"\n" % (self.id, self.precode)
 		return s
 	
 	def GenerateCodeAsRoot(self, slot=""):
@@ -224,6 +231,9 @@ class Node:
 		self.code = self.SafeGetXMLData(node, "code")
 		self.precode = self.SafeGetXMLData(node, "precode")
 		self.header = self.SafeGetXMLData(node, "header")
+		
+		self.codebackup = self.code
+		self.precodebackup = self.precode
 		
 if __name__ == '__main__':
 		pass # move the test code here?

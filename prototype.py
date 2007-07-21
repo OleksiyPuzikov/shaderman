@@ -23,6 +23,8 @@ from core.shared import * # global variables
 
 from core.properties import PropertiesFrame # window being used to edit properties of nodes; will be replaced with prefs_window.py when ready
 
+from core.edit_window import EditDialog # we're using pretty simple edit window to edit the source code for nodes
+
 from core.node_draw import InitNodeDraw # initialization of node paint code - we need to load the settings for colors, fonts etc
 	
 class NodeCanvasBase(glcanvas.GLCanvas):
@@ -130,12 +132,13 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	self.popupID3 = wx.NewId()
 	self.popupID4 = wx.NewId()
 	self.popupID5 = wx.NewId()
+	self.popupID6 = wx.NewId()
 
 	self.Bind(wx.EVT_MENU, self.OnMenuSwitchParameters, id=self.popupID3)
+	self.Bind(wx.EVT_MENU, self.OnMenuEditCode, id=self.popupID6)
 
 	# different menus for different places to click
 	
-	#pos = event.GetPosition()
 	pos = self.CorrectPosition(event)
 	pos = self.ScreenToClient(pos)
 	x, y = pos
@@ -195,8 +198,13 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 			item = wx.MenuItem(menu, self.popupID5, "Iconic mode")
 			menu.AppendItem(item)
 			item.Enable(False) # TODO implement iconic mode et al
+			
+			menu.AppendSeparator()
+			
+			item = wx.MenuItem(menu, self.popupID6, "Edit code")
+			menu.AppendItem(item)
+			
 		else:
-			#pass # should show the brick menu here instead
 			menu = self.parent.brickMenu
 				
 	self.PopupMenu(menu)
@@ -217,6 +225,28 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 				c2.arrow.refreshFont()
 			
 		self.Refresh(True)
+		
+    def OnMenuEditCode(self, event):
+	if self.menuPanel != None:
+		editCode = True
+		dlg = EditDialog(self, "Edit code for %s" % self.menuPanel.node.name)
+		c = self.menuPanel.node.code
+		pc = self.menuPanel.node.precode
+		if c != "":
+			ac = c
+		else:
+			ac = pc
+			editCode = False
+		dlg.SetValue(ac)
+		if dlg.ShowModal() == wx.ID_OK:
+			if editCode:
+				self.menuPanel.node.code = dlg.GetValue()
+			else:
+				self.menuPanel.node.precode = dlg.GetValue()
+		del dlg
+		
+		if self.CUpdateMenuItem.IsChecked():
+			wx.PostEvent(self.parent, wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, frm.ID_ACTION))
 		
     def ActuallyDeleteConnection(self, connection):
 	if connection != None:
