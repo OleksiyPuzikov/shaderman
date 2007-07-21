@@ -549,8 +549,9 @@ class CanvasDropTarget(wx.PyDropTarget):
             data = self.data.GetData()
             if data == "wxTreeCtrl":
                 win = self.window.OnTreeLeftDClick(None)
-                win.x = x
-		win.y = y
+		if win != None:
+			win.x = x
+			win.y = y
         return d
 
 class MainFrame(wx.Frame):
@@ -702,7 +703,7 @@ class MainFrame(wx.Frame):
 		del self.brickMenu
 		
 	self.brickMenu = wx.Menu()
-	item = wx.MenuItem(self.brickMenu, -1, "Nodes")
+	item = wx.MenuItem(self.brickMenu, -1, "Insert node:")
 	self.brickMenu.AppendItem(item)
 	item.Enable(False)
 	self.brickMenu.AppendSeparator()
@@ -1025,6 +1026,7 @@ class MainFrame(wx.Frame):
     def OnTreeLeftDClick(self, event):
 	itemid = self.tree.GetSelection()
 	fullpath = self.tree.GetPyData(itemid)
+	pnl = None
 	if fullpath.endswith(".br"): # isn't directory or something
 		node1 = node.Node(GetNextNodeID(), fullpath, factory = self.factory)
 		nodes.append(node1)
