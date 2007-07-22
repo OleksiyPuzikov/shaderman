@@ -359,6 +359,51 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 			self.selection = (self.x, self.y, self.x, self.y)	
 
 		self.Refresh(False)
+		
+    hatetheglobals = -1
+    hatemenu = None
+		
+    def ManuallyAskCallback(self, event):
+	node = self.stoppanel.node
+	count = 1
+	
+	global hatetheglobals
+	
+	menuItem = hatemenu.FindItemById(event.GetId())
+	
+	for inp in node.in_params:
+		pname = str(inp["name"])
+		if pname == menuItem.GetLabel():
+			hatetheglobals = count
+			return
+		count += 1
+		
+    def ManuallyAskForInput(self, node):
+	menu = wx.Menu()
+	
+	global hatemenu
+	hatemenu = menu
+	
+	item = wx.MenuItem(menu, -1, "Connect to:")
+	menu.AppendItem(item)
+	item.Enable(False)
+		
+	menu.AppendSeparator()
+		
+	for inp in node.in_params:
+		pname = str(inp["name"])
+		nid = wx.NewId()
+		item = wx.MenuItem(menu, nid, pname)
+		menu.AppendItem(item)
+		self.Bind(wx.EVT_MENU, self.ManuallyAskCallback, id=nid)
+		
+	global hatetheglobals
+	hatetheglobals = -1
+		
+	self.PopupMenu(menu)
+	menu.Destroy()
+	
+	return hatetheglobals
 
     def OnMouseUp(self, event):
 		self.insidePreview = False
@@ -370,25 +415,30 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 					stop = node_draw.IsArrowEnd(e.node, wx.ClientDC(self), self.x, self.y)
 					if -1 != stop:
 						self.stoppanel = e
-						start = node_draw.IsArrowStart(self.startpanel.node, wx.ClientDC(self), self.tax, self.tay)
-						
-						conn = node.Connection(GetNextConnectionID())
-						connections.append(conn)
-						
-						conn.assignInput(self.startpanel.node, self.startpanel.node.out_params[start-1]["name"])
-						prev = self.stoppanel.node.in_connections.get(self.stoppanel.node.in_params[stop-1]["name"], None)
-						if prev != None:
-							self.ActuallyDeleteConnection(prev)
-						
-						conn.assignOutput(self.stoppanel.node, self.stoppanel.node.in_params[stop-1]["name"])
-						
-						arrows.append(self.temparrow)
-						self.temparrow.assignConnection(conn)
-						
-						DropSuccessful = True
-
-						if self.CUpdateMenuItem.IsChecked():
-							wx.PostEvent(self.parent, wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, frm.ID_ACTION))
+						if stop == 0: # ask for the connection using popupMenu and some ugly callback hack...
+							stop = self.ManuallyAskForInput(e.node)
+							if -1 != stop: 
+								start = node_draw.IsArrowStart(self.startpanel.node, wx.ClientDC(self), self.tax, self.tay)
+								
+								conn = node.Connection(GetNextConnectionID())
+								connections.append(conn)
+								
+								conn.assignInput(self.startpanel.node, self.startpanel.node.out_params[start-1]["name"])
+								prev = self.stoppanel.node.in_connections.get(self.stoppanel.node.in_params[stop-1]["name"], None)
+								if prev != None:
+									self.ActuallyDeleteConnection(prev)
+								
+								conn.assignOutput(self.stoppanel.node, self.stoppanel.node.in_params[stop-1]["name"])
+								
+								arrows.append(self.temparrow)
+								self.temparrow.assignConnection(conn)
+								
+								self.temparrow.refreshFont()
+								
+								DropSuccessful = True
+		
+								if self.CUpdateMenuItem.IsChecked():
+									wx.PostEvent(self.parent, wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, frm.ID_ACTION))
 						
 		if not DropSuccessful:
 			self.temparrow = None

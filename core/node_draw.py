@@ -120,7 +120,7 @@ def IsArrowEnd(anode, dc, x, y):
 	xx = x-anode.panel.x
 	yy = y-anode.panel.y
 		
-	for i in range(1, len(anode.in_params)+1):
+	for i in range(0, len(anode.in_params)+1):
 		if (xx in range(0, col1+headerh*2)) and (yy in range(i*headerh, (i+1)*headerh)):
 			return i	
 				
