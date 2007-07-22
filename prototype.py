@@ -417,28 +417,29 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 						self.stoppanel = e
 						if stop == 0: # ask for the connection using popupMenu and some ugly callback hack...
 							stop = self.ManuallyAskForInput(e.node)
-							if -1 != stop: 
-								start = node_draw.IsArrowStart(self.startpanel.node, wx.ClientDC(self), self.tax, self.tay)
-								
-								conn = node.Connection(GetNextConnectionID())
-								connections.append(conn)
-								
-								conn.assignInput(self.startpanel.node, self.startpanel.node.out_params[start-1]["name"])
-								prev = self.stoppanel.node.in_connections.get(self.stoppanel.node.in_params[stop-1]["name"], None)
-								if prev != None:
-									self.ActuallyDeleteConnection(prev)
-								
-								conn.assignOutput(self.stoppanel.node, self.stoppanel.node.in_params[stop-1]["name"])
-								
-								arrows.append(self.temparrow)
-								self.temparrow.assignConnection(conn)
-								
-								self.temparrow.refreshFont()
-								
-								DropSuccessful = True
-		
-								if self.CUpdateMenuItem.IsChecked():
-									wx.PostEvent(self.parent, wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, frm.ID_ACTION))
+							if -1 == stop:
+								continue 
+						start = node_draw.IsArrowStart(self.startpanel.node, wx.ClientDC(self), self.tax, self.tay)
+						
+						conn = node.Connection(GetNextConnectionID())
+						connections.append(conn)
+						
+						conn.assignInput(self.startpanel.node, self.startpanel.node.out_params[start-1]["name"])
+						prev = self.stoppanel.node.in_connections.get(self.stoppanel.node.in_params[stop-1]["name"], None)
+						if prev != None:
+							self.ActuallyDeleteConnection(prev)
+						
+						conn.assignOutput(self.stoppanel.node, self.stoppanel.node.in_params[stop-1]["name"])
+						
+						arrows.append(self.temparrow)
+						self.temparrow.assignConnection(conn)
+						
+						self.temparrow.refreshFont()
+						
+						DropSuccessful = True
+
+						if self.CUpdateMenuItem.IsChecked():
+							wx.PostEvent(self.parent, wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, frm.ID_ACTION))
 						
 		if not DropSuccessful:
 			self.temparrow = None
