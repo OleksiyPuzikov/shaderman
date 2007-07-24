@@ -30,6 +30,11 @@ def SaveSettings(event):
 	event.Skip()
   
 def generator(self, filename, code):
+	try:
+		os.unlink("%s.sl*" % filename) # delete previous version and compiled shader
+	except:
+		pass	
+	
 	outf = open(filename+".sl", "w")
 	print >>outf, code
 	outf.close()
@@ -45,10 +50,6 @@ def generator(self, filename, code):
 		if s["name"] == "Renderer":
 			prman = s["default"]
 	
-	try:
-		os.unlink("%s.slo" % filename)
-	except:
-		pass
 	os.system("%s %s.sl" % (shader, filename))
 	
 	from mako.template import Template
