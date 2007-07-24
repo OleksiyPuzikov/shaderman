@@ -34,7 +34,7 @@ class Factory:
 		return ""
 	
 
-class Connection:
+class Connection(object):
 	""" Non-visual connection between the Nodes/Bricks. """
 	def __init__(self, id):
 		self.id = str(id)
@@ -63,13 +63,14 @@ class Connection:
 		return """connection%s = node.Connection(GetNextConnectionID())\nconnections.append(connection%s)\nconnection%s.assignInput(node%s, "%s")\nconnection%s.assignOutput(node%s, "%s")\n""" % (self.id, self.id, self.id, self.inputNode.id, self.inputName, self.id, self.outputNode.id, self.outputName)
 
 
-class Node:
+class Node(object):
 	""" The main code for everything you'll see in this project. """
 	def __init__(self, id, filename="", factory = None):
 		self.id = str(id)
 		
-		self.filename = filename
-		self.smallfilename = self.filename.replace(opj(os.getcwd()+"/"), "")
+		self.filename = ""
+		self.smallfilename = ""
+		
 		self.name = ""
 		self.author = ""
 		self.help = ""
@@ -93,9 +94,11 @@ class Node:
 			self.LoadFromFile(filename)
 
 	def LoadFromFile(self, filename):
-		logging.info(filename)
-		self.filename = filename
-		self.smallfilename = self.filename.replace(opj(os.getcwd()+"/"), "")
+		#logging.info(filename)
+		self.filename = good_path(good_node_filename(filename))
+		#logging.info(self.filename)
+		self.smallfilename = self.filename.replace(good_path(""), "")
+		#logging.info(self.smallfilename)
 		self.ParseLoadedCode()
 		
 	def SaveState(self): # serialize the state into file
