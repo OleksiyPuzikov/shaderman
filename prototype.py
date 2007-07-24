@@ -4,6 +4,9 @@ import os
 import glob
 import sys
 
+curpath = os.path.dirname(__file__)
+sys.path.append(curpath)
+
 import wx
 from wx import glcanvas
 
@@ -46,7 +49,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	self.panx = self.pany = 0
 	self.zoom = 1
 	
-	self.mx = self.my = self.mlastx = self.mlasty = 0 # for middle mouse click; TODO for Mac users, panning with Shift-LeftMouse
+	self.mx = self.my = self.mlastx = self.mlasty = 0 # for panning the canvas
 	
 	msz = wx.Display(0).GetGeometry()[2:]
 	self.maxsize = (-msz[0], -msz[1], msz[0]*2, msz[1]*2)
@@ -642,7 +645,7 @@ class MainFrame(wx.Frame):
 	
 	self.scenename = None
 	
-	img = wx.Image("core/icon.png")
+	img = wx.Image(os.path.join(curpath, "core/icon.png"))
 	self.SetIcon(self.MakeIcon(img))
 	
 	self.factory = node.Factory() # refactor to scene settings
@@ -778,7 +781,8 @@ class MainFrame(wx.Frame):
 			if not (mmenu.IsChecked()):
 				mmenu.Check(True)
 			
-	root = opj('%s/modes/%s/nodes' % (os.getcwd(), self.currentMode))
+	#root = opj('%s/modes/%s/nodes' % (os.getcwd(), self.currentMode))
+	root = opj('%s/modes/%s/nodes' % (curpath, self.currentMode))
 	
 	if self.brickMenu != None:
 		del self.brickMenu
@@ -897,11 +901,13 @@ class MainFrame(wx.Frame):
 	
 	#directories = filter(lambda x: os.path.isdir(x), sorted(glob.glob(opj('%s/modes/*' % os.getcwd()))))
 	# removed for Python 2.3 compatibility
-	directories = filter(lambda x: os.path.isdir(x), glob.glob(opj('%s/modes/*' % os.getcwd())))
+	directories = filter(lambda x: os.path.isdir(x), glob.glob(opj('%s/modes/*' % curpath)))
+	directories = map(lambda y: os.path.split(y)[1] , directories)
 	
 	for d in directories:
 		nid = wx.NewId()
-		dd = d.replace(opj('%s/modes/' % os.getcwd()), "")
+		#dd = d.replace(opj('%s/modes/' % os.getcwd()), "")
+		dd = d
 	        item = wx.MenuItem(menud, nid, dd, kind = wx.ITEM_RADIO)
         	menud.AppendItem(item)
 		self.modeMenus[nid] = item
