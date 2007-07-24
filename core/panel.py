@@ -20,7 +20,7 @@ except ImportError:
 	print "This application cannot run."
 	sys.exit(1)
 
-class NodePanel:
+class NodePanel(object):
 	def __init__(self, parent, x=100, y=100, showParameters = True):
 		self.x = x
 		self.y = y
@@ -112,7 +112,7 @@ class NodePanel:
 		
 		glDeleteTextures(_textureName)
 	
-class Arrow:
+class Arrow(object):
 	def __init__(self, parent):
 		self.x1 = 0
 		self.y1 = 0
