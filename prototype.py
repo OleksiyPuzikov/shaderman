@@ -953,6 +953,8 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU,  self.OnAction, id=self.ID_ACTION)
 	self.Bind(wx.EVT_MENU,  self.OnImmediateUpdate, id=self.ID_IMMEDIATEUPDATE)
 	self.Bind(wx.EVT_MENU,  self.OnViewGeneratedCode, id=self.ID_VIEWCODE)
+	
+	self.Bind(wx.EVT_MENU,  self.OnPreferences, id=wx.ID_PREFERENCES)
         
 	# file history binding
         #self.Bind(wx.EVT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE1 + 19)
@@ -967,6 +969,37 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
         self.Bind(wx.EVT_MENU, self.OnHelp, id=wx.ID_HELP)
         #self.Bind(wx.EVT_MENU, self.OnCheckVersion, id=ID_CHECK_VERSION)
+	
+    def OnPreferences(self, event):
+	import core.prefs_window as prefs
+	
+	if wx.Platform == "__WXMAC__":
+		deffontsize = 12
+	else:
+		deffontsize = 10
+	
+	curfontsize = settings.get("fontsize", str(deffontsize))
+	#self.preferences = [{'default': curfontsize, 'name': u'Font Size'}, {'default': u'prman', 'name': u'Font Name'}]
+	self.preferences = [{'default': curfontsize, 'name': u'Font Size'}]
+	
+	dlg = prefs.PropertiesFrame(None, self.preferences, title = "ShaderMan preferences")
+	dlg.Bind(wx.EVT_CLOSE, self.SavePreferences)
+	dlg.Show()
+	
+    def SavePreferences(self, event):
+	for s in self.preferences:
+		if s["name"] == "Font Size":
+			settings['fontsize'] = s["default"]
+		#if s["name"] == "Font Name":
+			#settings['fontname'] = s["default"]
+			
+	InitNodeDraw()
+	for obj in panels+arrows:
+		obj.refreshFont()
+	
+	self.c.Refresh(True)
+
+	event.Skip()
 
     def OnViewGeneratedCode(self, event): # code dublicated from OnAction
 	imported = __import__("modes.%s" % self.currentMode, globals(), locals(), ("name", "generator"))

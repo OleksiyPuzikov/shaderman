@@ -103,8 +103,6 @@ class PropertiesFrame(wx.Frame):
 		self.Freeze() # Disable screen updates on the parent control while we build the view
 		
 		for p in params:
-			#print p
-			
 			#panel = RangeEditPanel(self, p["name"], p["default"])
 			panel = TextEditPanel(self, p["name"], p["default"]) # always the same editor...
 			panel.AssignParameters(params)
