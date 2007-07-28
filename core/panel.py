@@ -60,8 +60,11 @@ class NodePanel(object):
 		return (ax in range(self.x, self.x+self.width)) and ((ay in range(self.y, self.y+self.height)))
 		
 	def paint(self):
+		mode = GL_TEXTURE_RECTANGLE_ARB # GL_TEXTURE_2D
+		
 		if self in self.owner.c.markedPanels:
-		 	glDisable(GL_TEXTURE_2D) # to ensure the image isn't "color corrected" by texture :)
+		 	#glDisable(GL_TEXTURE_2D) # to ensure the image isn't "color corrected" by texture :)
+			glDisable(mode)
 			glColor4f( 248/255.0, 206/255.0, 36/255.0, 0.5 ) # hardcoded selection color
 	
 			selectionBorder = 5 # ... and size
@@ -73,23 +76,24 @@ class NodePanel(object):
 			glVertex2i( self.x-selectionBorder, self.y+self.height+selectionBorder )
 			
 			glEnd()
-
 		
-	 	glEnable(GL_TEXTURE_2D)
+
+	 	glEnable(mode)
 		TextureBitmap = node_draw.PaintForm(self.node, 0, 0, wx.ClientDC(self.owner))
 		image = wx.ImageFromBitmap(TextureBitmap).GetData()
 			
 		# Create Texture
 		_textureName = 0
 		_textureName = glGenTextures(1)
-		glBindTexture(GL_TEXTURE_2D, _textureName)
+		
+		glBindTexture(mode, _textureName)
 			
 		glPixelStorei(GL_UNPACK_ALIGNMENT,1)
-		glTexImage2D(GL_TEXTURE_2D, 0, 3, TextureBitmap.GetWidth(), TextureBitmap.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, image)
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP)
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP)
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-		glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+		glTexImage2D(mode, 0, 3, TextureBitmap.GetWidth(), TextureBitmap.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, image)
+		glTexParameterf(mode, GL_TEXTURE_WRAP_S, GL_CLAMP)
+		glTexParameterf(mode, GL_TEXTURE_WRAP_T, GL_CLAMP)
+		glTexParameterf(mode, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+		glTexParameterf(mode, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
 	
 		glColor3f( 1, 1, 1 ) # to ensure the image isn't "color corrected" :)
@@ -99,13 +103,16 @@ class NodePanel(object):
 		glTexCoord2i(0, 0)
 		glVertex2i( self.x, self.y )
 		
-		glTexCoord2i(1, 0)
+		#glTexCoord2i(1, 0)
+		glTexCoord2i(self.width, 0)
 		glVertex2i( self.x+self.width, self.y )
 		
-		glTexCoord2i(1, 1)
+		#glTexCoord2i(1, 1)
+		glTexCoord2i(self.width, self.height)
 		glVertex2i( self.x+self.width, self.y+self.height )
 		
-		glTexCoord2i(0, 1)
+		#glTexCoord2i(0, 1)
+		glTexCoord2i(0, self.height)
 		glVertex2i( self.x, self.y+self.height )
 		
 		glEnd()
