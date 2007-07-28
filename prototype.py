@@ -1065,8 +1065,27 @@ class MainFrame(wx.Frame):
 	del panels[:]
 	del nodes[:]
 	f = open(self.scenename, 'r')
-	exec(f) # this might be dangerous?
+	
+	# simple sandbox protection
+	import copy
+	
+	gg = globals()
+	ll = locals()
+	
+	ng = copy.copy(gg)
+	nc = copy.copy(ll)
+	
+	try:
+		del ng['os'] # we're not allowing os module in files we're loading...
+	except:
+		pass
+	
+	exec(f, ng, nc) # this might be dangerous?
 	f.close()
+	
+	del ng
+	del nc
+	
 	self.c.Refresh(False)
     
     def OnOpenDocument(self, event):
