@@ -1,5 +1,6 @@
 import os
 import wx
+from core.utils import good_path
 
 try:
 	set = __import__("settings", globals(), locals(), ("settings"))
@@ -54,7 +55,7 @@ def generator(self, filename, code):
 	
 	from mako.template import Template
 	results = {}
-	previewtemplate = Template("".join(open("modes/Renderman SL/preview.rib").readlines()))
+	previewtemplate = Template("".join(open(good_path("preview.rib")).readlines()))
 	results["shadername"] = self.factory.getName() # this will be refactored
 	preview = previewtemplate.render(**results)
 	
