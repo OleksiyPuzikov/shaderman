@@ -46,9 +46,8 @@ class NodePanel(object):
 		self.width = width
 		self.height = height
 		
-	def SaveState(self):
-		s = """pnl = NodePanel(self, %d, %d, %s)\npanels.append(pnl)\npnl.assignNode(node%s)\n""" % (self.x, self.y,  str(self.showParameters), self.node.id)
-		return s
+	def __repr__(self):
+		return """pnl = NodePanel(self, %d, %d, %s)\npanels.append(pnl)\npnl.assignNode(node%s)\n""" % (self.x, self.y,  str(self.showParameters), self.node.id)
 		
 	def refreshFont(self):
 		width, height, headerh, dh, col1, col2 = node_draw.CalcMinMaxSize(self.node, wx.ClientDC(self.owner))
@@ -156,7 +155,7 @@ class Arrow(object):
 		self.hoffset1 = node_draw.CalcArrowPosition(self.idx1, wx.ClientDC(self.owner)) #dublicate code with below!!!
 		self.hoffset2 = node_draw.CalcArrowPosition(self.idx2, wx.ClientDC(self.owner))
 		
-	def SaveState(self):
+	def __repr__(self):
 		return """arr = Arrow(self)\narrows.append(arr)\narr.assignConnection(connection%s)\n""" % (self.connection.id)
 		
 	def refreshFont(self):

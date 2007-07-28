@@ -1108,7 +1108,7 @@ class MainFrame(wx.Frame):
 	
 	print >>f, """self.currentMode = "%s"\nself.ActuallySwitchMode()\n""" % self.currentMode
 
-	print >>f, "\n".join([thing.SaveState() for thing in nodes+panels+connections+arrows])
+	print >>f, "\n".join([str(thing) for thing in nodes+panels+connections+arrows])
 		
 	f.flush()
 	f.close()

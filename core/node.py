@@ -63,7 +63,7 @@ class Connection(object):
 		self.outputNode.in_connections[self.outputName] = self
 		return prev
 		
-	def SaveState(self):
+	def __repr__(self):
 		return """connection%s = node.Connection(-1)\nconnections.append(connection%s)\nconnection%s.assignInput(node%s, "%s")\nconnection%s.assignOutput(node%s, "%s")\n""" % (self.id, self.id, self.id, self.inputNode.id, self.inputName, self.id, self.outputNode.id, self.outputName)
 
 
@@ -112,7 +112,7 @@ class Node(object):
 		
 		self.ParseLoadedCode()
 		
-	def SaveState(self): # serialize the state into file
+	def __repr__(self): # serialize the state into file
 		s = """node%s = node.Node(-1, "%s", factory = self.factory)\nnodes.append(node%s)\n""" % (self.id, self.smallfilename.replace("\\", "/"), self.id)
 		for i in self.in_params:
 			if i["backup"] != i["default"]:
