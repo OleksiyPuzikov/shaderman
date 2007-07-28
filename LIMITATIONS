@@ -7,8 +7,8 @@ Thus, the following list of limitations:
   * Generated output files are always named using test123.* pattern - this name is hardcoded for now.
   * Unix mode is hardly functional except the example scene file - it's just here to show the possibilities of the tool
     besides the usual code generation.
-  * Source code isn't really documented, however some important and tricky parts are.
-  * Node display font and colors are partially hardcoded
+  * Node display colors are partially hardcoded; you can adjust font size using ~/.ShaderMan setting.
   * Node zoom isn't implemented
   * Auto-update of preview doesn't work when editing the parameters of node. Hovewer it works OK when you connect/disconnect nodes.
+  * Source code isn't really documented, however some important and tricky parts are.
   * Source code doesn't really adhere to PEP8 standards - I've mostly used the wxPython naming conventions and 8-spaces-tabulation.
