@@ -5,6 +5,9 @@ import wx
 import wx.html
 from core.utils import good_path
 
+aversion = "$Revision$"
+aversion = aversion.replace("$Revision: ", "").replace("$", "").strip()
+
 class AboutBox(wx.Dialog):
 	text = """
 <html>
@@ -15,12 +18,13 @@ class AboutBox(wx.Dialog):
 <font size="-2">
 &copy; Alexei Puzikov, http://www.dream.com.ua<br>
 Released under BSD license in 2007. http://code.google.com/p/shaderman<br>&nbsp;<br>
+Code version %s<br>
 wxPython %s (%s), running on Python %s</font></center></body></html>"""
 
 	def __init__(self, parent):
 		wx.Dialog.__init__(self, parent, -1, 'About ShaderMan.Next',)
 		html = wx.html.HtmlWindow(self, -1, size=(420, -1))
-		html.SetPage(self.text % (good_path("core/logo.gif"), wx.VERSION_STRING, wx.PlatformInfo[1], sys.version.split()[0]))
+		html.SetPage(self.text % (good_path("core/logo.gif"), aversion, wx.VERSION_STRING, wx.PlatformInfo[1], sys.version.split()[0]))
 		
 		ir = html.GetInternalRepresentation()
 		html.SetSize( (ir.GetWidth()+20, ir.GetHeight()+20) )
