@@ -36,8 +36,12 @@ class Factory:
 
 class Connection(object):
 	""" Non-visual connection between the Nodes/Bricks. """
+	
+	_instance_count = 0
+	
 	def __init__(self, id):
-		self.id = str(id)
+		Connection._instance_count += 1
+		self.id = str(Connection._instance_count)
 	
 		self.inputNode = None
 		self.inputName = ""
@@ -60,14 +64,18 @@ class Connection(object):
 		return prev
 		
 	def SaveState(self):
-		return """connection%s = node.Connection(GetNextConnectionID())\nconnections.append(connection%s)\nconnection%s.assignInput(node%s, "%s")\nconnection%s.assignOutput(node%s, "%s")\n""" % (self.id, self.id, self.id, self.inputNode.id, self.inputName, self.id, self.outputNode.id, self.outputName)
+		return """connection%s = node.Connection(-1)\nconnections.append(connection%s)\nconnection%s.assignInput(node%s, "%s")\nconnection%s.assignOutput(node%s, "%s")\n""" % (self.id, self.id, self.id, self.inputNode.id, self.inputName, self.id, self.outputNode.id, self.outputName)
 
 
 class Node(object):
 	""" The main code for everything you'll see in this project. """
+	
+	_instance_count = 0
+	
 	def __init__(self, id, filename="", factory = None):
-		self.id = str(id)
-		
+		Node._instance_count += 1
+		self.id = str(Node._instance_count)
+
 		self.filename = ""
 		self.smallfilename = ""
 		
@@ -95,14 +103,17 @@ class Node(object):
 
 	def LoadFromFile(self, filename):
 		#logging.info(filename)
+		
 		self.filename = good_path(good_node_filename(filename))
 		#logging.info(self.filename)
+		
 		self.smallfilename = self.filename.replace(good_path(""), "")
 		#logging.info(self.smallfilename)
+		
 		self.ParseLoadedCode()
 		
 	def SaveState(self): # serialize the state into file
-		s = """node%s = node.Node(GetNextNodeID(), "%s", factory = self.factory)\nnodes.append(node%s)\n""" % (self.id, self.smallfilename.replace("\\", "/"), self.id)
+		s = """node%s = node.Node(-1, "%s", factory = self.factory)\nnodes.append(node%s)\n""" % (self.id, self.smallfilename.replace("\\", "/"), self.id)
 		for i in self.in_params:
 			if i["backup"] != i["default"]:
 				s += """node%s.setInputDefault("%s", "%s")\n""" % (self.id, i["name"], i["default"])

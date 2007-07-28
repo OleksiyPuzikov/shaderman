@@ -12,13 +12,7 @@ connections = []
 settings = {}
 
 def GetNextNodeID():
-	try:
-		return max([int(node.id) for node in nodes])+1
-	except:
-		return 1
+	pass
 
 def GetNextConnectionID():
-	try:
-		return max([int(connection.id) for connection in connections])+1
-	except:
-		return 1
+	pass

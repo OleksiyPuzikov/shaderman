@@ -1057,6 +1057,8 @@ class MainFrame(wx.Frame):
 	del connections[:]
 	del panels[:]
 	del nodes[:]
+	node.Node._instance_count = 0
+	node.Connection._instance_count = 0
 	self.c.Refresh(False)
 
     def JustLoadTheData(self):
@@ -1080,7 +1082,7 @@ class MainFrame(wx.Frame):
 	except:
 		pass
 	
-	exec(f, ng, nc) # this might be dangerous?
+	exec(f, ng, nc)
 	f.close()
 	
 	del ng
