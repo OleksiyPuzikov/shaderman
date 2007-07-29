@@ -59,6 +59,7 @@ class NodePanel(object):
 		return (ax in range(self.x, self.x+self.width)) and ((ay in range(self.y, self.y+self.height)))
 		
 	def paint(self):
+		GL_TEXTURE_RECTANGLE_ARB = 0x84F5
 		mode = GL_TEXTURE_RECTANGLE_ARB # GL_TEXTURE_2D
 		
 		if self in self.owner.c.markedPanels:
