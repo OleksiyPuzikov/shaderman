@@ -6,12 +6,12 @@ import sys
 
 def good_path(filename, remove=os.path.sep+"core"):
 	"""This will return the path to related filename"""
-	#print os.path.dirname(inspect.getfile(sys._getframe(1))).replace(remove, "")
 	return os.path.join(os.path.dirname(inspect.getfile(sys._getframe(1))).replace(remove, ""), filename)
 	
 def good_node_filename(filename):
 	"""This should be probably moved to node class... We'll see"""
-	parts = filename.split(os.path.sep)
+	str = apply(os.path.join, tuple(filename.split('/')))
+	parts = str.split(os.path.sep)
 	if parts.index("modes") == -1:
 		return filename
 	else:
