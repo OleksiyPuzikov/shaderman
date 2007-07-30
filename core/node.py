@@ -82,6 +82,7 @@ class Node(object):
 		self.name = ""
 		self.author = ""
 		self.help = ""
+		self.icon = ""
 		
 		self.code = ""
 		self.precode = ""
@@ -196,16 +197,26 @@ class Node(object):
 		else:
 			return ""
 	
+	def SafeGetXMLAttribute(self, node, what):
+		temp = node.attributes.get(what)
+		if temp != None:
+			return temp.value.strip()
+		else:
+			return ""
+	
 	def ParseLoadedCode(self):
 		import xml.dom.minidom as mdom
 		parsed = mdom.parse(self.filename) # TODO: exception handling
 		node = parsed.getElementsByTagName("node")[0]
 		
-		self.name = node.attributes.get("name").value.strip()
+		self.name = self.SafeGetXMLAttribute(node, "name")
 		logging.info(self.name)
 		
-		self.author = node.attributes.get("author").value.strip()
+		self.author = self.SafeGetXMLAttribute(node, "author")
 		logging.info(self.author)
+		
+		self.icon = self.SafeGetXMLAttribute(node, "icon")
+		logging.info(self.icon)
 		
 		self.help = self.SafeGetXMLData(node, "help")
 		

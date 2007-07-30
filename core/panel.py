@@ -21,7 +21,7 @@ except ImportError:
 	sys.exit(1)
 
 class NodePanel(object):
-	def __init__(self, parent, x=100, y=100, showParameters = True):
+	def __init__(self, parent, x=100, y=100, showParameters = True, showPreview = False, iconicMode = False):
 		self.x = x
 		self.y = y
 		
@@ -35,7 +35,7 @@ class NodePanel(object):
 		
 		self.showParameters = showParameters # this and following 3 might be a bit field; we'll see about it...
 		self.showPreview = False
-		self.iconicMode = False
+		self.iconicMode = iconicMode
 		
 	def assignNode(self, Node):
 		self.node = Node
@@ -47,7 +47,7 @@ class NodePanel(object):
 		self.height = height
 		
 	def __repr__(self):
-		return """pnl = NodePanel(self, %d, %d, %s)\npanels.append(pnl)\npnl.assignNode(node%s)\n""" % (self.x, self.y,  str(self.showParameters), self.node.id)
+		return """pnl = NodePanel(self, %d, %d, %s, %s, %s)\npanels.append(pnl)\npnl.assignNode(node%s)\n""" % (self.x, self.y,  str(self.showParameters), str(self.showPreview), str(self.iconicMode), self.node.id)
 		
 	def refreshFont(self):
 		width, height, headerh, dh, col1, col2 = node_draw.CalcMinMaxSize(self.node, wx.ClientDC(self.owner))
@@ -153,9 +153,8 @@ class Arrow(object):
 		if ((self.idx1 == -1) or (self.idx2 == -1)):
 			print "connection not found! something fatal!"
 			
-		self.hoffset1 = node_draw.CalcArrowPosition(self.idx1, wx.ClientDC(self.owner)) #dublicate code with below!!!
-		self.hoffset2 = node_draw.CalcArrowPosition(self.idx2, wx.ClientDC(self.owner))
-		
+		self.refreshFont()
+			
 	def __repr__(self):
 		return """arr = Arrow(self)\narrows.append(arr)\narr.assignConnection(connection%s)\n""" % (self.connection.id)
 		

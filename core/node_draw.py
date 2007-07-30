@@ -25,12 +25,10 @@ def InitNodeDraw():
 	global lcolor
 	global hcolor
 	if wx.Platform == "__WXMAC__":
-		#fontsize = 12
-		fontsize = int(settings.get("fontsize", 12))
+		fontsize = float(settings.get("fontsize", 12))
 		color = wx.Colour(220, 220, 220)
 	else:
-		#fontsize = 10
-		fontsize = int(settings.get("fontsize", 10))
+		fontsize = float(settings.get("fontsize", 10))
 		color = wx.SystemSettings.GetColour(wx.SYS_COLOUR_3DFACE)
 		
 	color2 = settings.get("bgcolor", None)
@@ -64,28 +62,32 @@ def CalcMinMaxSize(node, dc):
 	headerh = dc.GetCharHeight()+6
 	dh = (headerh-dc.GetFullTextExtent(node.name)[1])/2
 	
-	if node.panel.showParameters:
+	if node.panel.showParameters and not node.panel.iconicMode:
 		height = headerh * itemcount
 	else:
 		height = headerh
 	
-	width = headerh*4
+	if node.panel.iconicMode:
+		width = headerh
+	else:
+		width = headerh*4
 	
 	width1 = 0
-	if node.panel.showParameters:
+	if node.panel.showParameters and not node.panel.iconicMode:
 		extents = [ dc.GetFullTextExtent(str(inp["name"])) for inp in node.in_params ]
 		widths = [ extent[0] for extent in extents ]
 		if len(widths)>0:
 			width1 = max(widths)
 
 	width2 = 0
-	if node.panel.showParameters:
+	if node.panel.showParameters and not node.panel.iconicMode:
 		extents = [ dc.GetFullTextExtent(str(inp["name"])) for inp in node.out_params ]
 		widths = [ extent[0] for extent in extents ]
 		if len(widths)>0:
 			width2 = max(widths)
 	
-	width += max(width1+width2, dc.GetFullTextExtent(str(node.name))[0])
+	if not node.panel.iconicMode:
+		width += max(width1+width2, dc.GetFullTextExtent(str(node.name))[0])
 	
 	return width, height, headerh, dh, width1, width2
 	
@@ -96,7 +98,7 @@ def CalcArrowPosition(index, dc, node=None):
 	headerh = dc.GetCharHeight()+6
 	result = headerh * (index+1) + headerh/2 # because of header; beware of the preview placement!!!
 	if node != None:
-		if not node.panel.showParameters:
+		if not node.panel.showParameters or node.panel.iconicMode:
 			result = headerh/2
 	return result
 
@@ -162,7 +164,11 @@ def PaintForm(anode, left, top, dc):
 	mdc.DrawLine(width-1, 1, width-1, height-1)
 	
 	# header title
-	mdc.DrawText(anode.name, headerh, dh)
+	if not anode.panel.iconicMode:
+		mdc.DrawText(anode.name, headerh, dh)
+	else:
+		tw = dc.GetFullTextExtent(str(anode.icon))[0]
+		mdc.DrawText(anode.icon, (width-tw)/2, dh)
 	
 	ahh = headerh-dh*2
 	

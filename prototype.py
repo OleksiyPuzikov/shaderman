@@ -63,7 +63,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
         self.Bind(wx.EVT_LEFT_UP, self.OnMouseUp)
         self.Bind(wx.EVT_MOTION, self.OnMouseMotion)
         self.Bind(wx.EVT_LEFT_DCLICK, self.OnLeftDClick)
-	#self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel) # Zoom is partially implemented, but I don't like it.
+	self.Bind(wx.EVT_MOUSEWHEEL, self.OnMouseWheel) # Zoom is partially implemented, but I don't like it.
 
         self.Bind(wx.EVT_MIDDLE_DOWN, self.OnMiddleMouseDown)
         self.Bind(wx.EVT_MIDDLE_UP, self.OnMiddleMouseUp)
@@ -93,10 +93,24 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	elif zoomFactor < 0:
 		self.doZoom(zoomFactor)
 		
-    def doZoom(self, factor): # TODO implement canvas zoom
-	self.zoom += factor*0.05
-	self.InitGL()
-	self.Refresh(False)
+    def doZoom(self, factor): # TODO check with users if they actually like this implementation...
+	#self.zoom += factor*0.05
+	z = float(settings.get('fontsize', 10))
+	z += factor
+	z = min(20.0, max(4.0, z))
+	#print z
+	settings['fontsize'] = str(z)
+	
+	InitNodeDraw()
+	for obj in panels+arrows:
+		obj.refreshFont()
+	
+	self.Refresh(True)
+
+	#event.Skip()
+	
+	#self.InitGL()
+	#self.Refresh(False)
 
     def OnEraseBackground(self, event):
         pass # Do nothing, to avoid flashing on Windows
@@ -138,6 +152,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	self.popupID6 = wx.NewId()
 
 	self.Bind(wx.EVT_MENU, self.OnMenuSwitchParameters, id=self.popupID3)
+	self.Bind(wx.EVT_MENU, self.OnMenuSwitchIcon, id=self.popupID5)
 	self.Bind(wx.EVT_MENU, self.OnMenuEditCode, id=self.popupID6)
 
 	# different menus for different places to click
@@ -161,7 +176,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 					#self.menuConnection = connection[0]
 	
 			intest = node_draw.IsArrowEnd(e.node, wx.ClientDC(self), x, y)
-			if -1 != intest:
+			if intest>0: # it's -1 if there's nothing or 0 if it's header - but we don't need header workaround here
 				pname = e.node.in_params[intest-1]["name"]
 				connection = e.node.in_connections.get(pname, None)
 				if (connection != None): # there's connection
@@ -192,15 +207,16 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 			item.Check(self.menuPanel.showParameters)
 			item.Enable(True)
 		
-			item = wx.MenuItem(menu, self.popupID4, "Show preview")
+			item = wx.MenuItem(menu, self.popupID4, "Show preview", kind=wx.ITEM_CHECK)
 			menu.AppendItem(item)
 			item.Enable(False) # TODO implement preview
 	
 			menu.AppendSeparator()
 		
-			item = wx.MenuItem(menu, self.popupID5, "Iconic mode")
+			item = wx.MenuItem(menu, self.popupID5, "Iconic mode", kind=wx.ITEM_CHECK)
 			menu.AppendItem(item)
-			item.Enable(False) # TODO implement iconic mode et al
+			item.Check(self.menuPanel.iconicMode)
+			item.Enable(self.menuPanel.node.icon != "")
 			
 			menu.AppendSeparator()
 			
@@ -215,6 +231,21 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 		menu.Destroy()
 	self.Refresh(True)
 		
+    def OnMenuSwitchIcon(self, event):
+	if self.menuPanel != None:
+		self.menuPanel.iconicMode = event.Checked()
+		self.menuPanel.refreshFont()
+
+		for c in self.menuPanel.node.in_connections.itervalues():
+			c.arrow.refreshFont()
+		
+		for c in self.menuPanel.node.out_connections.itervalues():
+			for c2 in c:
+				c2.arrow.refreshFont()
+			
+		self.Refresh(True)
+	event.Skip()
+		
     def OnMenuSwitchParameters(self, event):
 	if self.menuPanel != None:
 		self.menuPanel.showParameters = event.Checked()
@@ -228,6 +259,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 				c2.arrow.refreshFont()
 			
 		self.Refresh(True)
+	event.Skip()
 		
     def OnMenuEditCode(self, event):
 	if self.menuPanel != None:
@@ -1015,14 +1047,18 @@ class MainFrame(wx.Frame):
 	try:
 		imported.preferences()
 	except: # module doesn't require preferences or they're not implemented yet
-		wx.MessageBox("This module doesn't provide the preferences to edit", "Nothing to do",  wx.ICON_INFORMATION);
+		wx.MessageBox("This module doesn't provide the preferences to edit", "Nothing to do",  wx.ICON_INFORMATION)
 	
     def OnFileHistory(self, event):
-	self.scenename = self.filehistory.GetHistoryFile(event.GetId() - wx.ID_FILE1)
-	self.JustLoadTheData()
-	self.SetTitle("%s - %s" % (self.scenename, productname))
-	self.filehistory.AddFileToHistory(self.scenename)
-	self.UpdateFileHistoryArray()
+	temp = self.filehistory.GetHistoryFile(event.GetId() - wx.ID_FILE1)
+	if os.path.exists(temp):
+		self.scenename = temp
+		self.JustLoadTheData()
+		self.SetTitle("%s - %s" % (self.scenename, productname))
+		self.filehistory.AddFileToHistory(self.scenename)
+		self.UpdateFileHistoryArray()
+	else:
+		wx.MessageBox("Scene file %s not found." % temp, "Nothing to do",  wx.ICON_INFORMATION)
 
     def OnImmediateUpdate(self, event):
 	pass
@@ -1099,29 +1135,36 @@ class MainFrame(wx.Frame):
 	del connections[:]
 	del panels[:]
 	del nodes[:]
-	f = open(self.scenename, 'r')
 	
-	# simple sandbox protection
-	import copy
-	
-	gg = globals()
-	ll = locals()
-	
-	ng = copy.copy(gg)
-	nc = copy.copy(ll)
+	res = False
 	
 	try:
-		del ng['os'] # we're not allowing os module in files we're loading...
-	except:
-		pass
-	
-	exec(f, ng, nc)
-	f.close()
-	
-	del ng
-	del nc
-	
-	self.c.Refresh(False)
+		f = open(self.scenename, 'r')
+		
+		# simple sandbox protection
+		import copy
+		
+		gg = globals()
+		ll = locals()
+		
+		ng = copy.copy(gg)
+		nc = copy.copy(ll)
+		
+		try:
+			del ng['os'] # we're not allowing os module in files we're loading...
+		except:
+			pass
+		
+		exec(f, ng, nc)
+		f.close()
+		
+		del ng
+		del nc
+		
+		res = True
+	finally:
+		self.c.Refresh(False)
+		return res
     
     def OnOpenDocument(self, event):
     	wildcard = "ShaderMan scenes|*.smn|All files (*)|*"
