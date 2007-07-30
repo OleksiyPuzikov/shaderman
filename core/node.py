@@ -250,7 +250,7 @@ class Node(object):
 					else:
 						t[attr] = ""
 				t["code"] = i.childNodes[0].data
-			self.out_params.append( t )
+				self.out_params.append( t )
 		logging.info(self.out_params)
 		
 		self.code = self.SafeGetXMLData(node, "code")
