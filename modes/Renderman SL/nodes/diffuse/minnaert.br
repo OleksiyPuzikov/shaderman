@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<node name="Minnaert" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Minnaert illumination model</help>
+ <in>
+	<param name="SurfaceColor" type="color" default="color(0,0.5,1)" />
+	<param name="Kd" type="float" default="0.8" />
+	<param name="Darkness" type="float" default="1" />
+ </in>
+ <precode><![CDATA[
+ normal Nf# = faceforward( normalize(N), I );
+ vector In# = normalize(I);
+
+ color Id# = 0;
+ 
+ illuminance(P, Nf#, PI/2) {
+
+	vector Ln# = normalize(L);
+	float NL# = Nf#.Ln#;
+
+	if(NL# > 0.0)
+	{
+		float NV# = max(Nf#.In#, 0);
+
+		Id# += (${Darkness} <= 1.0) ? NL# * pow(max(NV# * NL#, 0.1), (${Darkness} - 1.0)) /* The Real model */
+					    :
+  					      NL# * pow((1.001 - NV#), (${Darkness}  - 1.0)); /* Nvidia model */
+	}
+
+ }
+
+ Id# *= ${SurfaceColor} * ${Kd};
+
+]]></precode>
+<out>
+ <param type="color" name="color">Id#</param>
+</out>
+</node>

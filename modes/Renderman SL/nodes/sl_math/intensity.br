@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<node name="Intencity" author="Alexei Puzikov, http://www.dream.com.ua" >
+ <help>a+b-a*b</help>
+ <in>
+	<param name="in_color" type="color" default="0" />
+ </in>
+ <precode>
+   float temp_f#=( comp(${in_color}, 0)+comp(${in_color}, 1)+comp(${in_color}, 2) )/3;
+ </precode>
+ <out>
+	<param name="result" type="float">temp_f#</param>
+ </out>
+</node>

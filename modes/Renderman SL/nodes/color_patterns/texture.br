@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<node name="Texture file" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Color from texture file</help>
+ <in>
+	<param name="texturename" type="string" default="" />
+	<param name="s" type="float" default="s" />
+	<param name="t" type="float" default="t" />
+	<param name="scale_s" type="float" default="1" />
+	<param name="scale_t" type="float" default="1" />
+	<param name="blur" type="float" default="0" />
+ </in>
+ <precode><![CDATA[
+ float ss# = ${s} / ${scale_s};
+ float tt# = ${t} / ${scale_t};
+ color Ct# = color texture ("${texturename}", ss#, tt#, "blur", ${blur});
+]]></precode>
+<out>
+ <param type="color" name="color">Ct#</param>
+</out>
+</node>

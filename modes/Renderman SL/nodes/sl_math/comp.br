@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<node name="Comp" author="Alexei Puzikov, http://www.dream.com.ua" icon="Union">
+ <help>Returns the i-th component of variable</help>
+ <in>
+	<param name="a" type="variant" default="0" />
+	<param name="b" type="float" default="1" />
+ </in>
+ <out>
+	<param name="result" type="variant">comp(${a},${b})</param>
+ </out>
+</node>

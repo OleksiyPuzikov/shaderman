@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<node name="Transform Coordinates" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Scale and/or offset texture coordinates; rotation in radians.</help>
+ <in>
+	<param name="s" type="float" default="s" />
+	<param name="t" type="float" default="t" />
+	<param name="scale_s" type="float" default="1" />
+	<param name="offset_s" type="float" default="0" />
+	<param name="scale_t" type="float" default="1" />
+	<param name="offset_t" type="float" default="0" />
+	<param name="rotate" type="float" default="0" />
+ </in>
+<out>
+ <param type="float" name="out_s">s#</param>
+ <param type="float" name="out_t">t#</param>
+</out>
+ <precode><![CDATA[
+
+ float temp_s#=${s};
+ float temp_t#=${t};
+
+ float s# = temp_s#;
+ float t# = temp_t#;
+
+ if (${rot} != 0) {
+	s#=temp_s#*sin(${rot}) + temp_t#*cos(${rot});
+	t#=temp_s#*cos(${rot}) - temp_t#*sin(${rot});
+ }
+
+ t# = mod((t# * ${scale}) + (${offset}), 1.0);
+ s# = mod((s# * ${scale}) + (${offset}), 1.0);
+
+]]></precode>
+</node>
+

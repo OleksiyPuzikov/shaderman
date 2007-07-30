@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<node name="Braces" author="Alexei Puzikov, http://www.dream.com.ua" icon="()">
+ <help>Put () around the parameter</help>
+ <in>
+	<param name="a" type="variant" default="0" />
+ </in>
+ <out>
+	<param name="result" type="variant">(${a})</param>
+ </out>
+</node>

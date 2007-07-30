@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+
+<node name="Transform" author="Konstantin Kharitonov">
+ <help>Tranform input point from "from" coordinate system into "to" coordinate system</help>
+ <in>
+	<param name="P" type="point" default="P" />
+	<param name="from_coord" type="string" select="shader,camera,world,object,screen,raster,NDC" default="'current'" />
+	<param name="to_coord" type="string" select="shader,camera,world,object,screen,raster,NDC" default="'shader'" />
+ </in>
+<out>
+ <param type="point" name="output">transform(${from_coord}, ${to_coord}, ${P})</param>
+</out>
+</node>

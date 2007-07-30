@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<node name="Union" author="Alexei Puzikov, http://www.dream.com.ua" icon="Union">
+ <help>a+b-a*b</help>
+ <in>
+	<param name="a" type="variant" default="0" />
+	<param name="b" type="variant" default="0" />
+ </in>
+ <out>
+	<param name="result" type="variant">(${a}+${b}-(${a}*${b}))</param>
+ </out>
+</node>

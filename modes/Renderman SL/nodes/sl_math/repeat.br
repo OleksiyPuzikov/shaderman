@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+
+<node name="Repeat" author="Simon Bunker, http://www.rendermania.com">
+ <help>Repeat(x,freq) based on Steve May's RManNotes</help>
+ <in>
+	<param name="a" type="float" default="0" />
+	<param name="freq" type="floar" default="1" />
+ </in>
+ <out>
+	<param name="result" type="float">mod( ${a} * ${freq}, 1)</param>
+ </out>
+</node>
