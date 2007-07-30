@@ -70,7 +70,7 @@ def CalcMinMaxSize(node, dc):
 	if node.panel.iconicMode:
 		width = headerh
 	else:
-		width = headerh*4
+		width = headerh*2
 	
 	width1 = 0
 	if node.panel.showParameters and not node.panel.iconicMode:
@@ -87,7 +87,7 @@ def CalcMinMaxSize(node, dc):
 			width2 = max(widths)
 	
 	if not node.panel.iconicMode:
-		width += max(width1+width2, dc.GetFullTextExtent(str(node.name))[0])
+		width += max(width1+width2+headerh*2, dc.GetFullTextExtent(str(node.name))[0])
 	
 	return width, height, headerh, dh, width1, width2
 	
@@ -205,7 +205,8 @@ def PaintForm(anode, left, top, dc):
 		mdc.SetBrush(wx.Brush(color))
 		
 		if count < maxcount:
-			SunkenLine(col1+headerh*2, (count+1)*headerh, col2+headerh*2, hcolor, lcolor, mdc)
+			#SunkenLine(col1+headerh*2, (count+1)*headerh, col2+headerh*2, hcolor, lcolor, mdc)
+			SunkenLine(col1+headerh*2, (count+1)*headerh, width-col1-headerh*2, hcolor, lcolor, mdc)
 		count += 1		
 	
 	# vertical line
