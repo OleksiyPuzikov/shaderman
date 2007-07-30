@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<node name="Invert" author="Mikhail Lissin, http://www.mindy.ws">
+<node name="Invert" author="Mikhail Lissin, http://www.mindy.ws" icon="-x">
  <help>-a</help>
  <in>
 	<param name="a" type="variant" default="0" />

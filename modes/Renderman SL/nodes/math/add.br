@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<node name="Add" author="Alexei Puzikov, http://www.dream.com.ua">
+<node name="Add" author="Alexei Puzikov, http://www.dream.com.ua" icon="+">
  <help>a+b</help>
  <in>
 	<param name="a" type="variant" default="0" />

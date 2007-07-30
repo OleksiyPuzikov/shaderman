@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<node name="Invert" author="Kharitonov Konstantin">
+<node name="Invert" author="Kharitonov Konstantin" icon="1-x">
  <help>Invert input parameter,it must be in range 0..1</help>
  <in>
 	<param name="a" type="variant" default="1" />

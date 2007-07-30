@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 
-<node name="Average" author="Simon Bunker, http://www.rendermania.com">
+<node name="Average" author="Simon Bunker, http://www.rendermania.com" icon="(a+b)/2">
  <help>(a+b)/2</help>
  <in>
 	<param name="a" type="variant" default="0" />
