@@ -244,7 +244,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 				c2.arrow.refreshFont()
 			
 		self.Refresh(True)
-	event.Skip()
+		#event.Skip()
 		
     def OnMenuSwitchParameters(self, event):
 	if self.menuPanel != None:
@@ -259,7 +259,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 				c2.arrow.refreshFont()
 			
 		self.Refresh(True)
-	event.Skip()
+		#event.Skip()
 		
     def OnMenuEditCode(self, event):
 	if self.menuPanel != None:
