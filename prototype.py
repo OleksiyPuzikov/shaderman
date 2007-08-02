@@ -3,8 +3,11 @@
 import os
 import glob
 import sys
+import inspect
 
-curpath = os.path.dirname(__file__)
+curpath = os.path.dirname(inspect.getfile(sys._getframe(0)))
+if curpath=="":
+	curpath=os.getcwd()
 sys.path.append(curpath)
 
 import wx
@@ -15,7 +18,7 @@ productname = "ShaderMan.Next"
 try:
 	from OpenGL.GL import *
 except ImportError:
-	wx.MessageBox("OpenGL extensions for Python do not appear to be installed.\nThis application cannot run.", "Can't start %s" % productname,  wx.ICON_ERROR);
+	print("OpenGL extensions for Python do not appear to be installed.\nThis application cannot run.", "Can't start %s" % productname)
 	sys.exit(1)
 
 from core import node # non-visual elements of DAG
