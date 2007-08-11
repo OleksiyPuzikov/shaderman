@@ -39,11 +39,17 @@ def InitNodeDraw():
 	lhsv = RGBtoHSV(color.Get())
 	lhsv[2] -= 20
 	lrgb = HSVtoRGB(lhsv)
+	
+	lrgb = [max(x, 0) for x in lrgb]
+	
 	lcolor = wx.Colour(lrgb[0], lrgb[1], lrgb[2])
 
 	hhsv = RGBtoHSV(color.Get())
 	hhsv[2] += 9
 	hrgb = HSVtoRGB(hhsv)
+	
+	hrgb = [min(x, 255) for x in hrgb]
+	
 	hcolor = wx.Colour(hrgb[0], hrgb[1], hrgb[2])
 
 def SunkenLine(left, top, width, hcolor, lcolor, dc):
