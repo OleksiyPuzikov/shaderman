@@ -739,6 +739,7 @@ class MainFrame(wx.Frame):
 	self.ID_VIEWCODE = wx.NewId()
 	self.ID_IMMEDIATEUPDATE = wx.NewId()
 	self.ID_MODEPREFERENCES = wx.NewId()
+	self.ID_LAYOUTNODES = wx.NewId()
 	
 	self.modeMenus = {}
 	
@@ -778,7 +779,7 @@ class MainFrame(wx.Frame):
 	self.Bind(wx.EVT_SIZE, self.OnSize)
 	self.Bind(wx.EVT_SHOW, self.OnSize)
 	self.Bind(wx.EVT_MOVE, self.OnMove)
-        self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
+        #self.Bind(wx.EVT_ERASE_BACKGROUND, self.OnEraseBackground)
 	self.Bind(wx.EVT_WINDOW_DESTROY, self.OnCleanup)
 	
 	self.tree.Bind(wx.EVT_TREE_BEGIN_DRAG, self._startDrag)
@@ -934,6 +935,8 @@ class MainFrame(wx.Frame):
         menu3.Append(wx.ID_DELETE, "Delete")
         menu3.AppendSeparator()
         menu3.Append(wx.ID_SELECTALL, "Select all")
+        #menu3.AppendSeparator()
+        #menu3.Append(self.ID_LAYOUTNODES, "Layout nodes")
 	
         self.mainmenu.Append(menu3, "&Edit")
 
@@ -1004,7 +1007,8 @@ class MainFrame(wx.Frame):
 	self.Bind(wx.EVT_MENU,  self.OnViewGeneratedCode, id=self.ID_VIEWCODE)
 	
 	self.Bind(wx.EVT_MENU,  self.OnPreferences, id=wx.ID_PREFERENCES)
-        
+	#self.Bind(wx.EVT_MENU,  self.OnLayoutNodes, id=self.ID_LAYOUTNODES)
+	
 	# file history binding
         #self.Bind(wx.EVT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE1 + 19)
 
@@ -1018,6 +1022,43 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
         self.Bind(wx.EVT_MENU, self.OnHelp, id=wx.ID_HELP)
         #self.Bind(wx.EVT_MENU, self.OnCheckVersion, id=ID_CHECK_VERSION)
+	
+    def OnLayoutNodes(self, event): # apparently, doesn't work as expected
+	import core.topo
+	
+	#nodes = ['root', 'diff', 'spec', 'op', 'n1', 'n2']
+	#route = [('diff', 'root'), ('spec', 'root'), ('n1', 'op'), ('op','diff'), ('n2','root')]
+	
+	#nodes = [ p.node.id for p in panels ]
+	#route = [ (a.connection.inputNode.id, a.connection.outputNode.id) for a in arrows ]
+	
+	nodes = [ p.node for p in panels ]
+	route = [ (a.connection.inputNode, a.connection.outputNode) for a in arrows ]
+	
+	#print nodes
+	#print route
+	
+	sorted = core.topo.toposort(nodes, route)
+	for row in sorted:
+		print ">",
+		for item in row:
+			print item.id,
+		print ""
+		
+	MARGIN = 200
+	
+	counter = 0
+	for row in sorted:
+		x = counter*MARGIN
+		y = 0
+		for item in row:
+			item.panel.x = x
+			item.panel.y = y
+			y += item.panel.height + 20
+		counter += 1
+	
+	self.c.Refresh()
+	event.Skip()
 	
     def OnPreferences(self, event):
 	import core.prefs_window as prefs
