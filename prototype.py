@@ -148,7 +148,6 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	self.popupID1 = wx.NewId()
 	self.popupID2 = wx.NewId()
 	self.Bind(wx.EVT_MENU, self.OnMenuDeleteConnection, id=self.popupID1)
-	#self.Bind(wx.EVT_MENU, self.OnMenuDoNothing, id=self.popupID2)
 
 	self.popupID3 = wx.NewId()
 	self.popupID4 = wx.NewId()
