@@ -6,6 +6,7 @@ Note we're using wxPython facilities for actual painting, and then just mapping 
 
 import wx
 from core import node
+from core.panel import *
 from core.utils import *
 from core.shared import *
 
@@ -236,10 +237,10 @@ def on_paint(event):
 
 if __name__ == '__main__':
 
-	InitNodeDraw()
-
 	app = wx.PySimpleApp(0)
 	
+	InitNodeDraw()
+
 	frame = wx.Frame(None, -1, "Draw on Frame.")
 	panel = wx.Panel(frame, -1)
 	
@@ -250,6 +251,8 @@ if __name__ == '__main__':
 		
 	import os
 	node0 = node.Node(0, "%s/modes/Renderman SL/nodes/surface.br" % os.getcwd())
+	pnl0 = NodePanel(frame, 10, 10, True, False, False)
+	pnl0.assignNode(node0)
 		
 	wx.EVT_PAINT(panel, on_paint)
 	
