@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<node name="Particle system" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Newtonian particle system</help>
+ <in>
+	<param name="number" type="float" default="100" />
+	<param name="speed" type="float" default="0.1" />
+	<param name="trail_length" type="float" default="5" />
+	<param name="force" type="string" default="-0.002*la.Vector.K" />
+ </in>
+ <precode><![CDATA[
+
+PARTICLES# = ${number}
+
+class FountainParticle#(zoe.NewtonianParticle):
+    trailLength = ${trail_length}
+
+    def update(self):
+        self.impulse(${force})
+        zoe.NewtonianParticle.update(self)
+
+    def ok(self):
+        return self.pos[2] >= 0.0
+
+class FountainSystem#(zoe.System):
+    def new(self):
+        theta = random.uniform(0, zoe.twoPi)
+        phi = random.uniform(0, zoe.pi)
+        vel = la.PolarVector(${speed}, theta, phi)
+        return FountainParticle#(la.Vector.ZERO, vel)
+
+]]></precode>
+ <out>
+	<param type="variant" name="particles">engine.add(FountainSystem#(PARTICLES#))</param>
+</out>
+</node>

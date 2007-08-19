@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+
+<node name="Gravity" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Simple gravity force</help>
+ <in>
+	<param name="value" type="float" default="-0.002" />
+ </in>
+ <out>
+	<param type="variant" name="force">${value}*la.Vector.K</param>
+</out>
+</node>

@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<node name="Run" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Launch particle system and view results</help>
+ <in>
+	<param name="particles" type="variant" default="0" />
+ </in>
+ <code><![CDATA[
+import random
+import la
+import zoe
+
+${header}
+
+${precode}
+
+engine = zoe.Engine()
+engine.add(zoe.AxesObject())
+engine.add(zoe.GridObject())
+${particles}
+engine.add(zoe.FrameRateCounter(engine))
+engine.go()
+
+]]></code>
+</node>

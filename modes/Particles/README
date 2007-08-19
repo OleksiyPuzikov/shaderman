@@ -1,0 +1,264 @@
+Summary
+
+    ZOE (formerly OGLE) is a very trivial OpenGL graphics engine,
+    written entirely in Python.  It's primary focus is rapid
+    prototyping and experimentation, so it only supports the barest
+    essentials, with focus on wire frames.  Special emphasis is placed
+    on particle systems (where non-interacting particles follow simple
+    rules).
+
+    Some familiarity with OpenGL is expected, although when exploiting
+    the particle system abstractions no specific OpenGL knowledge is
+    required.
+
+    Demos included are the obligatory spinning polyhedra, static views
+    of conic sections and the Solar System, a 3D surface plotter, a
+    fountain of sparks, a swarming behavior model, a random walk
+    example, a whirpool effect using gravity and drag, and an example
+    of chaos theory and sensitivity to initial conditions.
+
+
+Getting the software
+
+    The software is available in a tarball here:
+    "http://www.alcyone.com/pyos/zoe/zoe-latest.tar.gz",
+    http://www.alcyone.com/pyos/zoe/zoe-latest.tar.gz.
+
+    The official URL for this Web site is
+    "http://www.alcyone.com/pyos/zoe/", 
+    http://www.alcyone.com/pyos/zoe/.
+
+
+Requirements
+
+    - A functioning "OpenGL", http://www.opengl.org/ system.  Those
+      who do not have any special OpenGL-supporting hardware can
+      install "MesaGL", http://www.mesa3d.org/.
+
+    - "GLUT", http://www.opengl.org/developers/documentation/glut/#2.
+      Often this will be integrated into your OpenGL system, but you
+      may have to install it separately.
+
+    - "PyOpenGL 2.x", http://pyopengl.sourceforge.net/ or greater.
+
+
+Introduction
+
+    ZOE is a very simple OpenGL-based graphics engine.  OpenGL
+    describes the primitives for doing 3D graphics; a graphics engine
+    assists in organizing these primitives into higher-level
+    abstractions.  Some basic familiarity with OpenGL is expected to
+    be able to use ZOE.
+
+    ZOE has five primary abstractions, in the form of classes.  The
+    first is the **engine**, which encapsulates the functioning window
+    system.  The second is the **object**, which encapsulates
+    individual objects moving and interacting in the system.  A
+    subclass of an object is a **group**, a collection of objects that
+    move in unison, possibly with some transformations applied before
+    and undone afterward.  Third, a **camera** encapsulates the
+    transformations involved in placing and manipulating the view.
+    Fourth, an **interface** encapsulates all the user interface
+    controls (keystrokes and mouse manipulation) so that they can be
+    exploited by the system.
+
+    ZOE also has some support for particle systems; that is, a group
+    of non-interacting particles that behave according to the same
+    rules.  A **particle** is a special form of object that is merely
+    represented with a point, and an optional trail (to make its
+    motion more prominent), and a **system** is a group object which
+    contains and manages a collection of non-interacting particles.
+
+
+Classes
+
+    **'Engine'** -- The fundamental class; one must create one of
+      these in order to use ZOE.  The engine manages a window, and
+      operations in it.  A camera and interface can be attached to an
+      engine simply by creating instances of them; they each take an
+      already-created engine as their first argument.  Instances of
+      the class 'Object' (or its many subclasses) can be added to and
+      removed from the engine with the 'add' and 'remove' methods,
+      respectively.  The method 'redisplay' can be called by other
+      objects to register a redisplay event.  Engines have a
+      'committing' attribute which, if true, results in a separate series
+      of calls to the 'commit' methods of all its objects, all after
+      the 'update' calls.
+
+    **'Object'** -- There are two fundamental operations that an
+      engine employs, which affects all other objects.  These are
+      displaying and updating.  Displaying is self-explanatory;
+      updating involves changing the positions, orientations, and even
+      possibly existence of objects within an engine.  The engine and
+      all ZOE objects, including groups, contain 'display' and
+      'update' methods, both containing no arguments, which serve
+      these purposes; the methods for the engine itself simply display
+      and update all objects registered with that engine.  Objects
+      also have a 'commit' method, which is only used in the case that
+      the 'committing' attribute is set in the engine.  This method is
+      for interacting objects which need to update their states
+      "synchronously"; in these cases, the 'update' method should stow
+      the changes, and the 'commit' method should finalize the update.
+
+    **'Group'** -- An ZOE group is a specialized object which
+      contains 'append', 'extend', and 'remove' methods -- similar for
+      Python sequences -- to add and remove objects to it.  The
+      'display' and 'update' methods, respectively, simply call the
+      'display' and 'update' methods of each of its objects.  Groups
+      also implement two other methods: 'before' and 'after', which
+      are executed before and after (imagine that) each of the objects
+      are displayed.  These are used to implement modeling
+      transformations or other behaviors that apply to the whole
+      group.
+
+    **'Transform'** -- The encapsulation of a modelling transformation
+      (*i.e.*, translating, rotating, or scaling).  Transforms have an
+      'apply' method.
+
+    **'TransformGroup'** -- As a special case, a transform group
+      exists which manages a list of 'Transform' instances.  The
+      transform group's 'before' method pushes a matrix, applies each
+      of the transforms in order; the 'after' method pops it.
+
+    **'Camera'** -- A camera is registered with an engine by passing
+      in the engine as the first argument when it is constructed.  The
+      camera implements the viewing transformation (before any objects
+      are rendered) by calling its 'view' method.  It also contains a
+      'refresh' method which does any refreshing if necessary; these
+      are analogous to the 'display' and 'update' methods for objects.
+
+    **'Interface'** -- An interface is registered with an engine by
+      passing in the engine as the first argument when it is
+      constructed.  The interface represents the interactive aspects
+      of the engine.  It contains methods that can be overridden in
+      subclasses and are called by the engine it's registered with
+      when user interface events occur, such as 'keyPressed',
+      'mouseMove', 'mouseDrag', 'entryChange', 'reshapeWindow', and so
+      on.
+
+    **'Particle'** -- An individual particle in a particle system.  A
+      particle has a member 'pos', which is a 3-tuple (or acts as one)
+      of floats that represents its position.  Particles have an
+      optional trail, which helps make their motion more obvious.
+
+    **'NewtonianParticle'** -- A particle that obeys Newton's laws of
+      motion, at least in that it has a velocity (represented by a
+      'vel' member), which is updated against the position.
+      Technically, the 'vel' member (also a 3-tuple or equivalent)
+      does not represent the velocity, but rather the velocity times
+      the change in time, or rather the change in position.  Included
+      also is a 'impulse' method which will update the velocity by
+      applying a change in velocity.
+
+    Other classes are included; check the documentation for the 'zoe'
+    module.
+
+
+User interface
+
+    By default, in the 'setup' method of the 'Engine' object, a camera
+    and interface is set up if none has been explicitly selected.
+    (The 'setup' method can be called explicitly.)  The camera and
+    interface chosen by default are aimed at the origin, and can be
+    manipulated by the following interface:
+
+    **q, ESC (escape), or F12** -- Quit, close down the system.
+
+    **SP (space)** -- Toggle between pausing and running.
+
+    **z** -- Zoom in.
+
+    **Z** -- Zoom out.
+
+    **CR (carriage return)** -- Step forward one frame and pause.
+
+    **>** -- Resize the window to twice its current width and length.
+
+    **<** -- Resize the window to half its current width and length.
+
+    **r** -- Reset to the default zoom level.
+
+    **d** -- Move the target toward the positive x axis.
+
+    **a** -- Move the target toward the negative x axis.
+
+    **w** -- Move the target toward the positive y axis.
+
+    **x** -- Move the target toward the negative y axis.
+
+    **e** -- Move the target toward the positive z axis.
+
+    **c** -- Move the target toward the negative z axis.
+
+    **s** -- Reset the target toward the origin.
+
+    **left mouse click and drag** -- Pivot the camera around the
+      origin.
+
+
+Known issues
+
+    - Obviously, ZOE is written entirely in Python and thus is not
+      designed for speed.  Nevertheless, it can be get decent frame
+      rates for relatively simple models.  Performance can be improved
+      by deferring work to the OpenGL subsystem; *e.g.*, by doing
+      transformations instead of explicit trigonometric calculations
+      within Python.
+
+    - Occasional rounding and clipping errors can be seen where lines
+      return to the origin.  I haven't gotten around to fully
+      investigating this.
+
+    - The documentation is, needless to say, sketchy.
+
+
+Wish list
+
+    - There is a great deal more to be fleshed out.  So much so, in
+      fact, that it is hard to know where to start.
+
+    - The 'la' module can be better integrated into the ZOE engine
+      itself, and even possibly released separately.  Quaternion
+      support comes to mind.
+
+    - At present an ZOE 'Engine' can only manage one GLUT window.
+      This could be changed.
+
+
+References
+
+    - *OpenGL Programming Guide*, Woo, Neider, Davis, Shreiner.
+
+    - *OpenGL Reference Manual*, Shreiner (editor).
+
+    - "The official OpenGL Web site.", http://www.opengl.org/
+
+    - "Books on OpenGL.",
+      http://www.opengl.org/developers/documentation/books.html
+
+    - "GLUT specification.",
+      http://www.opengl.org/developers/documentation/glut/
+
+
+License
+
+    This code is released under the "LGPL",
+    http://www.gnu.org/copyleft/lesser.html.
+
+
+Release history
+
+    - 1.0; 2002 Aug 8.  Initial release.
+
+
+Author
+
+    This module was written by "Erik Max Francis",
+    http://www.alcyone.com/max/.  If you use this software, have
+    suggestions for future releases, or bug reports, "I'd love to hear
+    about it", mailto:pyos@alcyone.com.
+
+
+Version
+
+    Version 1.0a $Date: 2002/08/09 $ $Author: max $
