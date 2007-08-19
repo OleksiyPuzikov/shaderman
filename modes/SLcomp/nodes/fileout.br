@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<node name="FileOut" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Render compositng results</help>
+ <in>
+	<param name="result" type="variant" default="0" />
+ </in>
+ <code>
+${header}
+surface ${shadername} (${shaderparams}) 
+{
+${precode}
+
+Ci = color(${result}[0], ${result}[1], ${result}[2]);
+Oi = ${result}[3];
+}
+ </code>
+</node>

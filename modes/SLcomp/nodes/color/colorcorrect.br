@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<node name="Color Correct" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>Simple color correction; works via RGB->YUV->RGB algorithm so might be slow</help>
+
+ <in>
+	<param name="InputColor" type="variant" default="0" />
+	<param name="Gamma" type="float" default="1" />
+	<param name="Brightness" type="float" default="0" />
+	<param name="AdjustRed" type="float" default="0" />
+	<param name="AdjustBlue" type="float" default="0" />
+ </in>
+ 
+ <out>
+	<param name="OutputColor" type="variant">finalcolor#</param>
+ </out>
+ 
+<precode>
+
+float r# = ${InputColor}[0];
+float g# = ${InputColor}[1];
+float b# = ${InputColor}[2];
+float a# = ${InputColor}[3];
+
+float y#  =  (0.257 * r#) + (0.504 * g#) + (0.098 * b#) + 16;
+float cr# =  (0.439 * r#) - (0.368 * g#) - (0.071 * b#) + 128;
+float cb# = -(0.148 * r#) - (0.291 * g#) + (0.439 * b#) + 128;
+
+y# = y# + ${Brightness};
+cr# = cr# + ${AdjustRed};
+cb# = cb# + ${AdjustBlue};
+
+b# = clamp(1.164*(y# - 16) + 2.018*(cb# - 128), 0, 255);
+g# = clamp(1.164*(y# - 16) - 0.813*(cr# - 128) - 0.391*(cb# - 128), 0, 255);
+r# = clamp(1.164*(y# - 16) + 1.596*(cr# - 128), 0, 255);
+
+float g1# = 1/${Gamma};
+
+r# = pow(r#, g1#);
+g# = pow(g#, g1#);
+b# = pow(b#, g1#);
+
+float finalcolor#[4];
+finalcolor#[0] = r#;
+finalcolor#[1] = g#;
+finalcolor#[2] = b#;
+finalcolor#[3] = a#;
+
+</precode>
+</node>

@@ -1,0 +1,202 @@
+self.currentMode = "SLcomp"
+self.ActuallySwitchMode()
+
+node1 = node.Node(-1, "modes/SLcomp/nodes/filein.br", factory = self.factory)
+nodes.append(node1)
+node1.setInputDefault("filename", "/home/apuzikov/src.tx")
+
+node2 = node.Node(-1, "modes/SLcomp/nodes/fileout.br", factory = self.factory)
+nodes.append(node2)
+
+node3 = node.Node(-1, "modes/SLcomp/nodes/math/over.br", factory = self.factory)
+nodes.append(node3)
+
+node4 = node.Node(-1, "modes/SLcomp/nodes/filein.br", factory = self.factory)
+nodes.append(node4)
+node4.setInputDefault("filename", "/home/apuzikov/dest.tx")
+
+node5 = node.Node(-1, "modes/SLcomp/nodes/math/colorcorrect.br", factory = self.factory)
+nodes.append(node5)
+node5.setInputDefault("Gamma", "0.5")
+
+node6 = node.Node(-1, "modes/SLcomp/nodes/math/in.br", factory = self.factory)
+nodes.append(node6)
+
+node7 = node.Node(-1, "modes/SLcomp/nodes/math/out.br", factory = self.factory)
+nodes.append(node7)
+
+node8 = node.Node(-1, "modes/SLcomp/nodes/math/atop.br", factory = self.factory)
+nodes.append(node8)
+
+node9 = node.Node(-1, "modes/SLcomp/nodes/math/xor.br", factory = self.factory)
+nodes.append(node9)
+
+node10 = node.Node(-1, "modes/SLcomp/nodes/math/plus.br", factory = self.factory)
+nodes.append(node10)
+
+pnl = NodePanel(self, 39, 27, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node1)
+
+pnl = NodePanel(self, 555, 245, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node2)
+
+pnl = NodePanel(self, 314, 190, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node3)
+
+pnl = NodePanel(self, 44, 309, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node4)
+
+pnl = NodePanel(self, 302, 30, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node5)
+
+pnl = NodePanel(self, 313, 265, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node6)
+
+pnl = NodePanel(self, 317, 349, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node7)
+
+pnl = NodePanel(self, 315, 436, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node8)
+
+pnl = NodePanel(self, 323, 534, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node9)
+
+pnl = NodePanel(self, 320, 617, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node10)
+
+connection1 = node.Connection(-1)
+connections.append(connection1)
+connection1.assignInput(node1, "result")
+connection1.assignOutput(node3, "a")
+
+connection2 = node.Connection(-1)
+connections.append(connection2)
+connection2.assignInput(node4, "result")
+connection2.assignOutput(node3, "b")
+
+connection3 = node.Connection(-1)
+connections.append(connection3)
+connection3.assignInput(node1, "result")
+connection3.assignOutput(node5, "InputColor")
+
+connection4 = node.Connection(-1)
+connections.append(connection4)
+connection4.assignInput(node1, "result")
+connection4.assignOutput(node6, "a")
+
+connection5 = node.Connection(-1)
+connections.append(connection5)
+connection5.assignInput(node4, "result")
+connection5.assignOutput(node6, "b")
+
+connection6 = node.Connection(-1)
+connections.append(connection6)
+connection6.assignInput(node1, "result")
+connection6.assignOutput(node7, "a")
+
+connection7 = node.Connection(-1)
+connections.append(connection7)
+connection7.assignInput(node4, "result")
+connection7.assignOutput(node7, "b")
+
+connection8 = node.Connection(-1)
+connections.append(connection8)
+connection8.assignInput(node1, "result")
+connection8.assignOutput(node8, "a")
+
+connection9 = node.Connection(-1)
+connections.append(connection9)
+connection9.assignInput(node4, "result")
+connection9.assignOutput(node8, "b")
+
+connection10 = node.Connection(-1)
+connections.append(connection10)
+connection10.assignInput(node1, "result")
+connection10.assignOutput(node9, "a")
+
+connection11 = node.Connection(-1)
+connections.append(connection11)
+connection11.assignInput(node4, "result")
+connection11.assignOutput(node9, "b")
+
+connection13 = node.Connection(-1)
+connections.append(connection13)
+connection13.assignInput(node1, "result")
+connection13.assignOutput(node10, "a")
+
+connection14 = node.Connection(-1)
+connections.append(connection14)
+connection14.assignInput(node4, "result")
+connection14.assignOutput(node10, "b")
+
+connection15 = node.Connection(-1)
+connections.append(connection15)
+connection15.assignInput(node10, "result")
+connection15.assignOutput(node2, "result")
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection1)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection2)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection3)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection4)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection5)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection6)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection7)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection8)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection9)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection10)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection11)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection13)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection14)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection15)
+

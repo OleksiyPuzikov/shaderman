@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<node name="atop" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>a atop b</help>
+ <in>
+	<param name="a" type="variant" default="0" />
+	<param name="b" type="variant" default="0" />
+ </in>
+
+<precode>
+float col#[4];
+
+col#[0] = ${a}[0]*${a}[3]*${b}[3]+${b}[0]*(1-${a}[3]);
+col#[1] = ${a}[1]*${a}[3]*${b}[3]+${b}[1]*(1-${a}[3]);
+col#[2] = ${a}[2]*${a}[3]*${b}[3]+${b}[2]*(1-${a}[3]);
+col#[3] = ${a}[3]*${b}[3]+${b}[3]*(1-${a}[3]);
+</precode>
+
+ <out>
+	<param name="result" type="variant">col#</param>
+ </out>
+</node>

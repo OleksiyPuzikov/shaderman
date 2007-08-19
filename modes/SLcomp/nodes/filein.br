@@ -1,0 +1,47 @@
+<?xml version="1.0"?>
+
+<node name="FileIn" author="Alexei Puzikov, http://www.dream.com.ua">
+ <help>FileIn</help>
+ <in>
+	<param name="filename" type="string" default="''" />
+	<param name="offset_x" type="float" default="0" />
+	<param name="offset_y" type="float" default="0" />
+	<param name="scale_x" type="float" default="1" />
+	<param name="scale_y" type="float" default="1" />
+	<param name="rotate" type="float" default="0" />
+	<param name="blur" type="float" default="0" />
+ </in>
+<precode><![CDATA[
+
+	float s# = s;
+	float t# = t;
+	
+ float temp_s#=s#;
+ float temp_t#=t#;
+
+// uniform float mapres#[2];
+// textureinfo( "${filename}", "resolution", mapres );
+
+ if (${rotate} != 0) {
+	s#=temp_s#*sin(${rotate}) + temp_t#*cos(${rotate});
+	t#=temp_s#*cos(${rotate}) - temp_t#*sin(${rotate});
+ }	
+
+t# = t# * ${scale_y} + ${offset_y};
+s# = s# * ${scale_x} + ${offset_x};
+
+float res#[4];
+
+color tex# = texture("${filename}", s#, t#, s#, t#, s#, t#, s#, t#, "blur", ${blur});
+res#[3] = texture("${filename}"[3], s#, t#, s#, t#, s#, t#, s#, t#, "fill", 1.0 );
+
+res#[0] = comp(tex#,0);
+res#[1] = comp(tex#,1);
+res#[2] = comp(tex#,2);
+
+
+]]></precode>
+ <out>
+	<param name="result" type="variant">res#</param>
+ </out>
+</node>
