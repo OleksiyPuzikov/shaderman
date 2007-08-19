@@ -15,6 +15,7 @@ You can find the binary redistributions of the requirement components for your p
      and install the appropriate setuptools.
   1. easy_install wxPython
   2. easy_install pyopengl
+  3. easy_install ctypes
 
 **MAC OS X:**
   You can use the binary downloads from the VisionEgg, or alternatively, use easy_install.
