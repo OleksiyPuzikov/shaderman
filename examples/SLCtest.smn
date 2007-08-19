@@ -8,30 +8,30 @@ node1.setInputDefault("filename", "/home/apuzikov/src.tx")
 node2 = node.Node(-1, "modes/SLcomp/nodes/fileout.br", factory = self.factory)
 nodes.append(node2)
 
-node3 = node.Node(-1, "modes/SLcomp/nodes/math/over.br", factory = self.factory)
+node3 = node.Node(-1, "modes/SLcomp/nodes/porter_duff/over.br", factory = self.factory)
 nodes.append(node3)
 
 node4 = node.Node(-1, "modes/SLcomp/nodes/filein.br", factory = self.factory)
 nodes.append(node4)
 node4.setInputDefault("filename", "/home/apuzikov/dest.tx")
 
-node5 = node.Node(-1, "modes/SLcomp/nodes/math/colorcorrect.br", factory = self.factory)
+node5 = node.Node(-1, "modes/SLcomp/nodes/color/colorcorrect.br", factory = self.factory)
 nodes.append(node5)
 node5.setInputDefault("Gamma", "0.5")
 
-node6 = node.Node(-1, "modes/SLcomp/nodes/math/in.br", factory = self.factory)
+node6 = node.Node(-1, "modes/SLcomp/nodes/porter_duff/in.br", factory = self.factory)
 nodes.append(node6)
 
-node7 = node.Node(-1, "modes/SLcomp/nodes/math/out.br", factory = self.factory)
+node7 = node.Node(-1, "modes/SLcomp/nodes/porter_duff/out.br", factory = self.factory)
 nodes.append(node7)
 
-node8 = node.Node(-1, "modes/SLcomp/nodes/math/atop.br", factory = self.factory)
+node8 = node.Node(-1, "modes/SLcomp/nodes/porter_duff/atop.br", factory = self.factory)
 nodes.append(node8)
 
-node9 = node.Node(-1, "modes/SLcomp/nodes/math/xor.br", factory = self.factory)
+node9 = node.Node(-1, "modes/SLcomp/nodes/porter_duff/xor.br", factory = self.factory)
 nodes.append(node9)
 
-node10 = node.Node(-1, "modes/SLcomp/nodes/math/plus.br", factory = self.factory)
+node10 = node.Node(-1, "modes/SLcomp/nodes/porter_duff/plus.br", factory = self.factory)
 nodes.append(node10)
 
 pnl = NodePanel(self, 39, 27, True, False, False)
