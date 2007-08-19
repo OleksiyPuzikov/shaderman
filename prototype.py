@@ -48,6 +48,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	self.SetSize((200, 200))
 	
 	self.markedPanels = []
+	self.menuPanel = None
 
 	self.panx = self.pany = 0
 	self.zoom = 1
@@ -489,6 +490,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 						self.temparrow.refreshFont()
 						
 						DropSuccessful = True
+						self.temparrow = None
 
 						if self.CUpdateMenuItem.IsChecked():
 							wx.PostEvent(self.parent, wx.CommandEvent(wx.wxEVT_COMMAND_MENU_SELECTED, frm.ID_ACTION))
@@ -735,6 +737,7 @@ class MainFrame(wx.Frame):
 	
         self.tree.Bind(wx.EVT_LEFT_DCLICK, self.OnTreeLeftDClick)
 	
+	#self.ID_MINIM = wx.NewId()
 	self.ID_ACTION = wx.NewId()
 	self.ID_VIEWCODE = wx.NewId()
 	self.ID_IMMEDIATEUPDATE = wx.NewId()
@@ -751,6 +754,7 @@ class MainFrame(wx.Frame):
 	self.ActuallySwitchMode()
 
 	aTable = wx.AcceleratorTable([
+				#(wx.ACCEL_NORMAL, ord('M'), self.ID_MINIM),
 				(wx.ACCEL_NORMAL, wx.WXK_F9, self.ID_ACTION),
 				(wx.ACCEL_NORMAL, wx.WXK_DELETE, wx.ID_DELETE),
 				(wx.ACCEL_CTRL, ord('S'), wx.ID_SAVE),
@@ -936,6 +940,8 @@ class MainFrame(wx.Frame):
         menu3.AppendSeparator()
         menu3.Append(wx.ID_SELECTALL, "Select all")
         #menu3.AppendSeparator()
+        #menu3.Append(self.ID_MINIM, "Minimize current node")
+        #menu3.Append(wx.ID_SELECTALL, "Select all")
         #menu3.Append(self.ID_LAYOUTNODES, "Layout nodes")
 	
         self.mainmenu.Append(menu3, "&Edit")
@@ -1023,7 +1029,7 @@ class MainFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.OnHelp, id=wx.ID_HELP)
         #self.Bind(wx.EVT_MENU, self.OnCheckVersion, id=ID_CHECK_VERSION)
 	
-    def OnLayoutNodes(self, event): # apparently, doesn't work as expected
+    def OnLayoutNodes(self, event): # apparently, doesn't work as expected. But left here for [possible] experiments in the future.
 	import core.topo
 	
 	#nodes = ['root', 'diff', 'spec', 'op', 'n1', 'n2']
