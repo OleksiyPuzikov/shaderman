@@ -271,13 +271,13 @@ class Group(object):
 
 		self.nodes = []
 
-		self.in_params = []
-		self.in_connections = {}
-		self.out_params = []
-		self.out_connections = {}
+		#self.in_params = []
+		#self.in_connections = {}
+		#self.out_params = []
+		#self.out_connections = {}
 		
 	def AddNode(self, anode):
-		pass
+		self.nodes.append(anode)
 	
 	def __repr__(self): # serialize the state into file
 		s = """group%s = node.Group()\ngroups.append(group%s)\n""" % (self.id, self.id)
