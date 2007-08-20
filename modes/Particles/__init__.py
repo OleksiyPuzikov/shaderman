@@ -10,4 +10,5 @@ def generator(self, filename, code):
 	print >>outf, code
 	outf.close()
 	
-	os.system("python %s/%s.py" % (__path__[0], filename))
+	import subprocess
+	p = subprocess.Popen("python %s/%s.py" % (__path__[0], filename), shell=True)
