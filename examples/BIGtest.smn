@@ -1,112 +1,112 @@
 self.currentMode = "Renderman SL"
 self.ActuallySwitchMode()
 
-node1 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
+node1 = node.Node(-1, "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
 nodes.append(node1)
 
-node2 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
+node2 = node.Node(-1, "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
 nodes.append(node2)
 
-node3 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
+node3 = node.Node(-1, "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
 nodes.append(node3)
 
-node4 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
+node4 = node.Node(-1, "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
 nodes.append(node4)
 
-node5 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
+node5 = node.Node(-1, "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
 nodes.append(node5)
 
-node6 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
+node6 = node.Node(-1, "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
 nodes.append(node6)
 
-node7 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
+node7 = node.Node(-1, "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
 nodes.append(node7)
 
-node8 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
+node8 = node.Node(-1, "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
 nodes.append(node8)
 
-node9 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
+node9 = node.Node(-1, "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
 nodes.append(node9)
 
-node10 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
+node10 = node.Node(-1, "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
 nodes.append(node10)
 
-node11 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
+node11 = node.Node(-1, "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
 nodes.append(node11)
 
-node12 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
+node12 = node.Node(-1, "modes/Renderman SL/nodes/noises/wnoise.br", factory = self.factory)
 nodes.append(node12)
 
-node13 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
+node13 = node.Node(-1, "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
 nodes.append(node13)
 
-node14 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
+node14 = node.Node(-1, "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
 nodes.append(node14)
 
-node15 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
+node15 = node.Node(-1, "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
 nodes.append(node15)
 
-node16 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
+node16 = node.Node(-1, "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
 nodes.append(node16)
 
-node17 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
+node17 = node.Node(-1, "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
 nodes.append(node17)
 
-node18 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
+node18 = node.Node(-1, "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
 nodes.append(node18)
 
-node19 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
+node19 = node.Node(-1, "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
 nodes.append(node19)
 node19.setInputDefault("b", "2")
 
-node20 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
+node20 = node.Node(-1, "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
 nodes.append(node20)
 node20.setInputDefault("b", "2")
 
-node21 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
+node21 = node.Node(-1, "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
 nodes.append(node21)
 node21.setInputDefault("b", "2")
 
-node22 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
+node22 = node.Node(-1, "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
 nodes.append(node22)
 node22.setInputDefault("b", "2")
 
-node23 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
+node23 = node.Node(-1, "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
 nodes.append(node23)
 node23.setInputDefault("b", "2")
 
-node24 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
+node24 = node.Node(-1, "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
 nodes.append(node24)
 node24.setInputDefault("b", "2")
 
-node25 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
+node25 = node.Node(-1, "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
 nodes.append(node25)
 node25.setInputDefault("b", "2")
 
-node26 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
+node26 = node.Node(-1, "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
 nodes.append(node26)
 node26.setInputDefault("b", "2")
 
-node27 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
+node27 = node.Node(-1, "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
 nodes.append(node27)
 node27.setInputDefault("b", "2")
 
-node28 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
+node28 = node.Node(-1, "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
 nodes.append(node28)
 
-node29 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
+node29 = node.Node(-1, "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
 nodes.append(node29)
 
-node30 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
+node30 = node.Node(-1, "modes/Renderman SL/nodes/math/add.br", factory = self.factory)
 nodes.append(node30)
 
-node31 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/mul.br", factory = self.factory)
+node31 = node.Node(-1, "modes/Renderman SL/nodes/math/mul.br", factory = self.factory)
 nodes.append(node31)
 
-node32 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
+node32 = node.Node(-1, "modes/Renderman SL/nodes/math/div.br", factory = self.factory)
 nodes.append(node32)
 
-node33 = node.Node(GetNextNodeID(), "modes/Renderman SL/nodes/modern_surface.br", factory = self.factory)
+node33 = node.Node(-1, "modes/Renderman SL/nodes/modern_surface.br", factory = self.factory)
 nodes.append(node33)
 
 pnl = NodePanel(self, 111, 42)
@@ -241,162 +241,162 @@ pnl = NodePanel(self, 1398, 251)
 panels.append(pnl)
 pnl.assignNode(node33)
 
-connection1 = node.Connection(GetNextConnectionID())
+connection1 = node.Connection(-1)
 connections.append(connection1)
 connection1.assignInput(node11, "result")
 connection1.assignOutput(node18, "a")
 
-connection2 = node.Connection(GetNextConnectionID())
+connection2 = node.Connection(-1)
 connections.append(connection2)
 connection2.assignInput(node10, "result")
 connection2.assignOutput(node18, "b")
 
-connection3 = node.Connection(GetNextConnectionID())
+connection3 = node.Connection(-1)
 connections.append(connection3)
 connection3.assignInput(node4, "result")
 connection3.assignOutput(node17, "b")
 
-connection4 = node.Connection(GetNextConnectionID())
+connection4 = node.Connection(-1)
 connections.append(connection4)
 connection4.assignInput(node5, "result")
 connection4.assignOutput(node17, "a")
 
-connection5 = node.Connection(GetNextConnectionID())
+connection5 = node.Connection(-1)
 connections.append(connection5)
 connection5.assignInput(node6, "result")
 connection5.assignOutput(node16, "b")
 
-connection6 = node.Connection(GetNextConnectionID())
+connection6 = node.Connection(-1)
 connections.append(connection6)
 connection6.assignInput(node7, "result")
 connection6.assignOutput(node16, "a")
 
-connection7 = node.Connection(GetNextConnectionID())
+connection7 = node.Connection(-1)
 connections.append(connection7)
 connection7.assignInput(node8, "result")
 connection7.assignOutput(node15, "b")
 
-connection8 = node.Connection(GetNextConnectionID())
+connection8 = node.Connection(-1)
 connections.append(connection8)
 connection8.assignInput(node3, "result")
 connection8.assignOutput(node15, "a")
 
-connection9 = node.Connection(GetNextConnectionID())
+connection9 = node.Connection(-1)
 connections.append(connection9)
 connection9.assignInput(node2, "result")
 connection9.assignOutput(node14, "b")
 
-connection10 = node.Connection(GetNextConnectionID())
+connection10 = node.Connection(-1)
 connections.append(connection10)
 connection10.assignInput(node1, "result")
 connection10.assignOutput(node14, "a")
 
-connection11 = node.Connection(GetNextConnectionID())
+connection11 = node.Connection(-1)
 connections.append(connection11)
 connection11.assignInput(node9, "result")
 connection11.assignOutput(node13, "b")
 
-connection12 = node.Connection(GetNextConnectionID())
+connection12 = node.Connection(-1)
 connections.append(connection12)
 connection12.assignInput(node12, "result")
 connection12.assignOutput(node13, "a")
 
-connection13 = node.Connection(GetNextConnectionID())
+connection13 = node.Connection(-1)
 connections.append(connection13)
 connection13.assignInput(node13, "result")
 connection13.assignOutput(node19, "a")
 
-connection14 = node.Connection(GetNextConnectionID())
+connection14 = node.Connection(-1)
 connections.append(connection14)
 connection14.assignInput(node14, "result")
 connection14.assignOutput(node27, "a")
 
-connection15 = node.Connection(GetNextConnectionID())
+connection15 = node.Connection(-1)
 connections.append(connection15)
 connection15.assignInput(node15, "result")
 connection15.assignOutput(node26, "a")
 
-connection16 = node.Connection(GetNextConnectionID())
+connection16 = node.Connection(-1)
 connections.append(connection16)
 connection16.assignInput(node16, "result")
 connection16.assignOutput(node25, "a")
 
-connection17 = node.Connection(GetNextConnectionID())
+connection17 = node.Connection(-1)
 connections.append(connection17)
 connection17.assignInput(node17, "result")
 connection17.assignOutput(node24, "a")
 
-connection18 = node.Connection(GetNextConnectionID())
+connection18 = node.Connection(-1)
 connections.append(connection18)
 connection18.assignInput(node18, "result")
 connection18.assignOutput(node21, "a")
 
-connection19 = node.Connection(GetNextConnectionID())
+connection19 = node.Connection(-1)
 connections.append(connection19)
 connection19.assignInput(node19, "result")
 connection19.assignOutput(node28, "a")
 
-connection20 = node.Connection(GetNextConnectionID())
+connection20 = node.Connection(-1)
 connections.append(connection20)
 connection20.assignInput(node27, "result")
 connection20.assignOutput(node28, "b")
 
-connection21 = node.Connection(GetNextConnectionID())
+connection21 = node.Connection(-1)
 connections.append(connection21)
 connection21.assignInput(node26, "result")
 connection21.assignOutput(node29, "a")
 
-connection22 = node.Connection(GetNextConnectionID())
+connection22 = node.Connection(-1)
 connections.append(connection22)
 connection22.assignInput(node25, "result")
 connection22.assignOutput(node29, "b")
 
-connection23 = node.Connection(GetNextConnectionID())
+connection23 = node.Connection(-1)
 connections.append(connection23)
 connection23.assignInput(node24, "result")
 connection23.assignOutput(node30, "a")
 
-connection24 = node.Connection(GetNextConnectionID())
+connection24 = node.Connection(-1)
 connections.append(connection24)
 connection24.assignInput(node21, "result")
 connection24.assignOutput(node30, "b")
 
-connection25 = node.Connection(GetNextConnectionID())
+connection25 = node.Connection(-1)
 connections.append(connection25)
 connection25.assignInput(node28, "result")
 connection25.assignOutput(node22, "a")
 
-connection26 = node.Connection(GetNextConnectionID())
+connection26 = node.Connection(-1)
 connections.append(connection26)
 connection26.assignInput(node29, "result")
 connection26.assignOutput(node23, "a")
 
-connection27 = node.Connection(GetNextConnectionID())
+connection27 = node.Connection(-1)
 connections.append(connection27)
 connection27.assignInput(node30, "result")
 connection27.assignOutput(node20, "a")
 
-connection28 = node.Connection(GetNextConnectionID())
+connection28 = node.Connection(-1)
 connections.append(connection28)
 connection28.assignInput(node22, "result")
 connection28.assignOutput(node31, "a")
 
-connection29 = node.Connection(GetNextConnectionID())
+connection29 = node.Connection(-1)
 connections.append(connection29)
 connection29.assignInput(node23, "result")
 connection29.assignOutput(node31, "b")
 
-connection30 = node.Connection(GetNextConnectionID())
+connection30 = node.Connection(-1)
 connections.append(connection30)
 connection30.assignInput(node31, "result")
 connection30.assignOutput(node32, "a")
 
-connection31 = node.Connection(GetNextConnectionID())
+connection31 = node.Connection(-1)
 connections.append(connection31)
 connection31.assignInput(node20, "result")
 connection31.assignOutput(node32, "b")
 
-connection32 = node.Connection(GetNextConnectionID())
+connection32 = node.Connection(-1)
 connections.append(connection32)
 connection32.assignInput(node32, "result")
 connection32.assignOutput(node33, "Diffuse")

@@ -473,7 +473,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 								continue 
 						start = node_draw.IsArrowStart(self.startpanel.node, wx.ClientDC(self), self.tax, self.tay)
 						
-						conn = node.Connection(GetNextConnectionID())
+						conn = node.Connection(-1)
 						connections.append(conn)
 						
 						conn.assignInput(self.startpanel.node, self.startpanel.node.out_params[start-1]["name"])
@@ -896,7 +896,7 @@ class MainFrame(wx.Frame):
     def OnNewBrickContextMenu(self, event):
 	newname = self.brickMenuArr[event.GetId()]
 	
-	node1 = node.Node(GetNextNodeID(), newname, factory = self.factory)
+	node1 = node.Node(-1, newname, factory = self.factory)
 	nodes.append(node1)
 		
 	pnl = NodePanel(self, x = 20 + self.c.panx, y = 20 + self.c.pany)
@@ -1275,7 +1275,7 @@ class MainFrame(wx.Frame):
 	fullpath = self.tree.GetPyData(itemid)
 	pnl = None
 	if fullpath.endswith(".br"): # isn't directory or something
-		node1 = node.Node(GetNextNodeID(), fullpath, factory = self.factory)
+		node1 = node.Node(-1, fullpath, factory = self.factory)
 		nodes.append(node1)
 		
 		pnl = NodePanel(self, x = 20 + self.c.panx, y = 20 + self.c.pany)
