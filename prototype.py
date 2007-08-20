@@ -938,10 +938,10 @@ class MainFrame(wx.Frame):
         menu3.Append(wx.ID_DELETE, "Delete")
         menu3.AppendSeparator()
         menu3.Append(wx.ID_SELECTALL, "Select all")
-        #menu3.AppendSeparator()
+        menu3.AppendSeparator()
         #menu3.Append(self.ID_MINIM, "Minimize current node")
         #menu3.Append(wx.ID_SELECTALL, "Select all")
-        #menu3.Append(self.ID_LAYOUTNODES, "Layout nodes")
+        menu3.Append(self.ID_LAYOUTNODES, "Compact nodes layout")
 	
         self.mainmenu.Append(menu3, "&Edit")
 
@@ -1012,7 +1012,7 @@ class MainFrame(wx.Frame):
 	self.Bind(wx.EVT_MENU,  self.OnViewGeneratedCode, id=self.ID_VIEWCODE)
 	
 	self.Bind(wx.EVT_MENU,  self.OnPreferences, id=wx.ID_PREFERENCES)
-	#self.Bind(wx.EVT_MENU,  self.OnLayoutNodes, id=self.ID_LAYOUTNODES)
+	self.Bind(wx.EVT_MENU,  self.OnLayoutNodes, id=self.ID_LAYOUTNODES)
 	
 	# file history binding
         #self.Bind(wx.EVT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE1 + 19)
@@ -1044,23 +1044,22 @@ class MainFrame(wx.Frame):
 	#print route
 	
 	sorted = core.topo.toposort(nodes, route)
-	for row in sorted:
-		print ">",
-		for item in row:
-			print item.id,
-		print ""
+	#for row in sorted:
+		#print ">",
+		#for item in row:
+			#print item.id,
+		#print ""
 		
-	MARGIN = 200
+	MARGIN = 35
 	
-	counter = 0
+	x = 0
 	for row in sorted:
-		x = counter*MARGIN
-		y = 0
+		maxwidth = max([item.panel.width for item in row])
 		for item in row:
 			item.panel.x = x
-			item.panel.y = y
-			y += item.panel.height + 20
-		counter += 1
+			#item.panel.y = y
+			#y += item.panel.height + 20
+		x += maxwidth + MARGIN
 	
 	self.c.Refresh()
 	event.Skip()
@@ -1074,7 +1073,6 @@ class MainFrame(wx.Frame):
 		deffontsize = 10
 	
 	curfontsize = settings.get("fontsize", str(deffontsize))
-	#self.preferences = [{'default': curfontsize, 'name': u'Font Size'}, {'default': u'prman', 'name': u'Font Name'}]
 	self.preferences = [{'default': curfontsize, 'name': u'Font Size'}]
 	
 	dlg = prefs.PropertiesFrame(None, self.preferences, title = "ShaderMan preferences")
