@@ -1,0 +1,42 @@
+self.currentMode = "Particles"
+self.ActuallySwitchMode()
+
+node1 = node.Node(-1, "modes/Particles/nodes/run.br", factory = self.factory)
+nodes.append(node1)
+
+node2 = node.Node(-1, "modes/Particles/nodes/system.br", factory = self.factory)
+nodes.append(node2)
+
+node3 = node.Node(-1, "modes/Particles/nodes/forces/gravity.br", factory = self.factory)
+nodes.append(node3)
+
+pnl = NodePanel(self, 552, 285, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node1)
+
+pnl = NodePanel(self, 311, 285, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node2)
+
+pnl = NodePanel(self, 123, 348, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node3)
+
+connection1 = node.Connection(-1)
+connections.append(connection1)
+connection1.assignInput(node2, "particles")
+connection1.assignOutput(node1, "particles")
+
+connection2 = node.Connection(-1)
+connections.append(connection2)
+connection2.assignInput(node3, "force")
+connection2.assignOutput(node2, "force")
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection1)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection2)
+
