@@ -269,7 +269,7 @@ class Group(object):
 		Group._instance_count += 1
 		self.id = str(Group._instance_count)
 
-		self.nodes = []
+		self.panels = []
 
 		#self.in_params = []
 		#self.in_connections = {}
@@ -277,7 +277,7 @@ class Group(object):
 		#self.out_connections = {}
 		
 	def AddNode(self, anode):
-		self.nodes.append(anode)
+		self.panels.append(anode)
 	
 	def __repr__(self): # serialize the state into file
 		s = """group%s = node.Group()\ngroups.append(group%s)\n""" % (self.id, self.id)
