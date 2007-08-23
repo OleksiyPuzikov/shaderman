@@ -260,28 +260,5 @@ class Node(object):
 		self.codebackup = self.code
 		self.precodebackup = self.precode
 		
-class Group(object):
-	""" Group of nodes """
-	
-	_instance_count = 0
-	
-	def __init__(self):
-		Group._instance_count += 1
-		self.id = str(Group._instance_count)
-
-		self.panels = []
-
-		#self.in_params = []
-		#self.in_connections = {}
-		#self.out_params = []
-		#self.out_connections = {}
-		
-	def AddNode(self, anode):
-		self.panels.append(anode)
-	
-	def __repr__(self): # serialize the state into file
-		s = """group%s = node.Group()\ngroups.append(group%s)\n""" % (self.id, self.id)
-		return s
-		
 if __name__ == '__main__':
 		pass # move the test code here?

@@ -195,3 +195,110 @@ class Arrow(object):
 		glVertex2i( x2-arrow_size, y2-arrow_size )
 		glVertex2i( x2-arrow_size, y2+arrow_size )
 		glEnd()
+		
+		
+class Group(object):
+	""" Group of panels """
+
+	_instance_count = 0
+
+	def __init__(self, parent):
+		Group._instance_count += 1
+		self.id = str(Group._instance_count)
+		self.owner = parent
+
+		self.panels = []
+
+	def AddPanel(self, apanel):
+		self.panels.append(apanel)
+
+	def __repr__(self): # serialize the state into file
+		s = """group%s = Group(self)\ngroups.append(group%s)\n""" % (self.id, self.id)
+		for p in self.panels:
+			s += "group%s.AddPanel(node%s.panel)\n" % (self.id, p.node.id)
+		return s
+		
+	def paint(self):
+		if len(self.panels):
+			w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
+			#print gs
+			
+			minx = min([p.x for p in self.panels])
+			maxx = max([(p.x+p.width) for p in self.panels])
+			miny = min([p.y for p in self.panels])
+			maxy = max([(p.y+p.height) for p in self.panels])
+			
+			GL_TEXTURE_RECTANGLE_ARB = 0x84F5
+			mode = GL_TEXTURE_RECTANGLE_ARB # GL_TEXTURE_2D
+			
+
+			glDisable(mode)
+			glColor4f( 161/255.0, 223/255.0, 149/255.0, 1 ) # hardcoded selection color
+
+			selectionBorder = 5 # ... and size
+			glBegin( GL_QUADS )
+
+			# top
+			glVertex2i( minx-selectionBorder, miny-h )
+			glVertex2i( maxx+selectionBorder, miny-h )
+			glVertex2i( maxx+selectionBorder, miny )
+			glVertex2i( minx-selectionBorder, miny )
+
+			# left
+			glVertex2i( minx-selectionBorder, miny )
+			glVertex2i( minx, miny )
+			glVertex2i( minx, maxy+selectionBorder )
+			glVertex2i( minx-selectionBorder, maxy+selectionBorder )
+
+			# right
+			glVertex2i( maxx, miny )
+			glVertex2i( maxx+selectionBorder, miny )
+			glVertex2i( maxx+selectionBorder, maxy+selectionBorder )
+			glVertex2i( maxx, maxy+selectionBorder )			
+			
+			# bottom
+			glVertex2i( minx, maxy )
+			glVertex2i( maxx, maxy )
+			glVertex2i( maxx, maxy+selectionBorder )
+			glVertex2i( minx, maxy+selectionBorder )
+			
+			glEnd()
+			
+		 	glEnable(mode)
+			TextureBitmap = node_draw.PaintGroup(self, wx.ClientDC(self.owner))
+			image = wx.ImageFromBitmap(TextureBitmap).GetData()
+
+			# Create Texture
+			_textureName = 0
+			_textureName = glGenTextures(1)
+
+			glBindTexture(mode, _textureName)
+
+			glPixelStorei(GL_UNPACK_ALIGNMENT,1)
+			glTexImage2D(mode, 0, 3, TextureBitmap.GetWidth(), TextureBitmap.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, image)
+			glTexParameterf(mode, GL_TEXTURE_WRAP_S, GL_CLAMP)
+			glTexParameterf(mode, GL_TEXTURE_WRAP_T, GL_CLAMP)
+			glTexParameterf(mode, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+			glTexParameterf(mode, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
+
+			glColor4f( 1, 1, 1, 1 ) # to ensure the image isn't "color corrected" :)
+
+			glBegin( GL_QUADS )
+
+			glTexCoord2i(0, 0)
+			glVertex2i( minx, miny-h )
+
+			glTexCoord2i(w, 0)
+			glVertex2i( minx+w, miny-h )
+
+			glTexCoord2i(w, h)
+			glVertex2i( minx+w, miny )
+
+			glTexCoord2i(0, h)
+			glVertex2i( minx, miny )
+
+			glEnd()
+
+			glDeleteTextures(_textureName)
+			

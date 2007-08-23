@@ -153,10 +153,12 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	self.popupID4 = wx.NewId()
 	self.popupID5 = wx.NewId()
 	self.popupID6 = wx.NewId()
+	self.popupID7 = wx.NewId()
 
 	self.Bind(wx.EVT_MENU, self.OnMenuSwitchParameters, id=self.popupID3)
 	self.Bind(wx.EVT_MENU, self.OnMenuSwitchIcon, id=self.popupID5)
 	self.Bind(wx.EVT_MENU, self.OnMenuEditCode, id=self.popupID6)
+	self.Bind(wx.EVT_MENU, self.OnMenuCreateGroup, id=self.popupID7)
 
 	# different menus for different places to click
 	
@@ -223,6 +225,11 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 			
 			menu.AppendSeparator()
 			
+			item = wx.MenuItem(menu, self.popupID7, "Create group")
+			menu.AppendItem(item)			
+
+			menu.AppendSeparator()
+			
 			item = wx.MenuItem(menu, self.popupID6, "Edit code")
 			menu.AppendItem(item)
 			
@@ -274,6 +281,23 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 				for c2 in c:
 					c2.arrow.refreshFont()
 			
+		self.Refresh(True)
+		
+		del ar
+		
+    def OnMenuCreateGroup(self, event):
+	if self.menuPanel != None:
+		group = Group(self)
+		
+		ar = self.markedPanels
+		if self.menuPanel not in ar:
+			ar.append(self.menuPanel)
+		
+		for p in ar: 
+			group.AddPanel(p)
+			
+		groups.append(group)
+		
 		self.Refresh(True)
 		
 		del ar
@@ -604,6 +628,9 @@ class NodeCanvas(NodeCanvasBase):
 		p.paint()
 		
 	glDisable(GL_TEXTURE_2D)
+	
+	for g in groups:
+		g.paint()
 	
 	if self.temparrow != None:
 		self.temparrow.paint()
@@ -1245,7 +1272,7 @@ class MainFrame(wx.Frame):
 	
 	print >>f, """self.currentMode = "%s"\nself.ActuallySwitchMode()\n""" % self.currentMode
 
-	print >>f, "\n".join([str(thing) for thing in nodes+panels+connections+arrows])
+	print >>f, "\n".join([str(thing) for thing in nodes+panels+connections+arrows+groups])
 		
 	f.flush()
 	f.close()

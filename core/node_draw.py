@@ -58,6 +58,17 @@ def SunkenLine(left, top, width, hcolor, lcolor, dc):
 	dc.DrawLine(left, top, left+width+1, top)
 	dc.SetPen(wx.Pen(hcolor, 1))
 	dc.DrawLine(left, top+1, left+width+1, top+1)
+	
+def CalcGroupSize(group, dc):
+	font = wx.Font(fontsize, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+	dc.SetFont(font)
+	
+	headerh = dc.GetCharHeight()+6
+	width = dc.GetFullTextExtent("group%s" % group.id)[0]
+	hh = dc.GetFullTextExtent("group%s" % group.id)[1]
+	dh = (headerh-hh)/2
+	
+	return width, headerh, dh
 
 def CalcMinMaxSize(node, dc):
 	itemcount = max(len(node.in_params), len(node.out_params))
@@ -134,6 +145,31 @@ def IsArrowEnd(anode, dc, x, y):
 			return i	
 				
 	return -1
+	
+def PaintGroup(group, dc):
+	mdc = wx.MemoryDC()
+	font = wx.Font(fontsize, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
+	mdc.SetFont(font)
+	
+	width, headerh, dh = CalcGroupSize(group, dc) # mdc?
+	
+	bmp = wx.EmptyBitmap(width, headerh)
+	mdc.SelectObject(bmp)
+	
+	# glColor4f( 36/255.0, 206/255.0, 36/255.0, 0.5 )
+	group_color = wx.Colour(161, 223, 149)
+	
+	mdc.SetBrush(wx.Brush(group_color))
+	mdc.SetPen(wx.Pen(group_color, 1, wx.TRANSPARENT))
+	mdc.DrawRectangle(0, 0, width, headerh)
+	
+	mdc.DrawText("group%s" % group.id, 0, dh)
+	
+	del mdc
+	if __name__ == '__main__':
+		dc.DrawBitmap(bmp, top, left)
+	
+	return bmp
 
 def PaintForm(anode, left, top, dc):
 	
