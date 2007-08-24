@@ -1403,6 +1403,7 @@ if __name__ == '__main__':
 		frm.SetTitle("%s - %s" % (frm.scenename, productname))
 		frm.filehistory.AddFileToHistory(frm.scenename)
 		frm.UpdateFileHistoryArray()
+	# else: activate the default mode here... this will speedup the load time
 	
 	app.MainLoop()
 
