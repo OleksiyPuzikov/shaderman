@@ -711,8 +711,8 @@ class CanvasDropTarget(wx.PyDropTarget):
             if data == "wxTreeCtrl":
                 win = self.window.OnTreeLeftDClick(None)
 		if win != None:
-			win.x = x
-			win.y = y
+			win.x = x+self.window.c.panx
+			win.y = y+self.window.c.pany
         return d
 
 class MainFrame(wx.Frame):

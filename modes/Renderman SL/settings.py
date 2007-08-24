@@ -1,1 +1,1 @@
-settings = [{'default': u'shader', 'name': u'ShaderCompiler'}, {'default': u'prman', 'name': u'Renderer'}]
+settings = [{'default': u'shaderdl', 'name': u'ShaderCompiler'}, {'default': u'renderdl', 'name': u'Renderer'}]
