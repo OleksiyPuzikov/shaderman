@@ -24,7 +24,12 @@ imageCache = {}
 
 def clearImageCache():
 	imageCache.clear()
+	
+GL_TEXTURE_RECTANGLE_ARB = 0x84F5
+texture_mode = GL_TEXTURE_RECTANGLE_ARB # GL_TEXTURE_2D
 
+selectionBorder = 5
+	
 class NodePanel(object):
 	def __init__(self, parent, x=100, y=100, showParameters = True, showPreview = False, iconicMode = False):
 		self.x = x
@@ -34,7 +39,7 @@ class NodePanel(object):
 		self.height = 150
 		
 		self.delta = (0,0)
-		self.originalClick = (0, 0)
+		#self.originalClick = (0, 0)
 		self.node = None
 		self.owner = parent
 		
@@ -69,12 +74,9 @@ class NodePanel(object):
 		imageCache[self.node.id] = None
 		
 	def paint(self):
-		GL_TEXTURE_RECTANGLE_ARB = 0x84F5
-		mode = GL_TEXTURE_RECTANGLE_ARB # GL_TEXTURE_2D
-		
 		if self in self.owner.c.markedPanels:
 		 	#glDisable(GL_TEXTURE_2D) # to ensure the image isn't "color corrected" by texture :)
-			glDisable(mode)
+			glDisable(texture_mode)
 			glColor4f( 248/255.0, 206/255.0, 36/255.0, 0.5 ) # hardcoded selection color
 	
 			selectionBorder = 5 # ... and size
@@ -88,7 +90,7 @@ class NodePanel(object):
 			glEnd()
 		
 
-	 	glEnable(mode)
+	 	glEnable(texture_mode)
 		
 		if imageCache.get(self.node.id, None) == None:
 			#print "miss"
@@ -105,14 +107,14 @@ class NodePanel(object):
 		_textureName = 0
 		_textureName = glGenTextures(1)
 		
-		glBindTexture(mode, _textureName)
+		glBindTexture(texture_mode, _textureName)
 			
 		glPixelStorei(GL_UNPACK_ALIGNMENT,1)
-		glTexImage2D(mode, 0, 3, image.GetWidth(), image.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, image.GetData())
-		glTexParameterf(mode, GL_TEXTURE_WRAP_S, GL_CLAMP)
-		glTexParameterf(mode, GL_TEXTURE_WRAP_T, GL_CLAMP)
-		glTexParameterf(mode, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-		glTexParameterf(mode, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+		glTexImage2D(texture_mode, 0, 3, image.GetWidth(), image.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, image.GetData())
+		glTexParameterf(texture_mode, GL_TEXTURE_WRAP_S, GL_CLAMP)
+		glTexParameterf(texture_mode, GL_TEXTURE_WRAP_T, GL_CLAMP)
+		glTexParameterf(texture_mode, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+		glTexParameterf(texture_mode, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
 		glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
 	
 		glColor3f( 1, 1, 1 ) # to ensure the image isn't "color corrected" :)
@@ -227,6 +229,8 @@ class Group(object):
 		self.owner = parent
 
 		self.panels = []
+		
+		self.delta = (0,0)
 
 	def AddPanel(self, apanel):
 		self.panels.append(apanel)
@@ -237,21 +241,41 @@ class Group(object):
 			s += "group%s.AddPanel(node%s.panel)\n" % (self.id, p.node.id)
 		return s
 		
+	def insideHeader(self, ax, ay):
+		#print "checking..."
+		if len(self.panels):
+			w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
+			
+			selectionBorder = 5 # ... and size
+			
+			minx = min([p.x for p in self.panels])-selectionBorder
+			maxx = max([(p.x+p.width) for p in self.panels])+selectionBorder
+			maxy = min([p.y for p in self.panels])
+			miny = maxy-h
+			
+			#print ax, ay, minx, maxx, miny, maxy
+			
+			return (ax in range(minx, maxx)) and ((ay in range(miny, maxy)))
+		else:
+			return False
+		
+	def getLeft(self):
+		return min([p.x for p in self.panels])-selectionBorder
+		
+	def getTop(self):
+		w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
+		return min([p.y for p in self.panels])-h
+		
 	def paint(self):
 		if len(self.panels):
 			w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
-			#print gs
 			
 			minx = min([p.x for p in self.panels])
 			maxx = max([(p.x+p.width) for p in self.panels])
 			miny = min([p.y for p in self.panels])
 			maxy = max([(p.y+p.height) for p in self.panels])
 			
-			GL_TEXTURE_RECTANGLE_ARB = 0x84F5
-			mode = GL_TEXTURE_RECTANGLE_ARB # GL_TEXTURE_2D
-			
-
-			glDisable(mode)
+			glDisable(texture_mode)
 			glColor4f( 161/255.0, 223/255.0, 149/255.0, 1 ) # hardcoded selection color
 
 			selectionBorder = 5 # ... and size
@@ -283,7 +307,7 @@ class Group(object):
 			
 			glEnd()
 			
-		 	glEnable(mode)
+		 	glEnable(texture_mode)
 			TextureBitmap = node_draw.PaintGroup(self, wx.ClientDC(self.owner))
 			image = wx.ImageFromBitmap(TextureBitmap).GetData()
 
@@ -291,14 +315,14 @@ class Group(object):
 			_textureName = 0
 			_textureName = glGenTextures(1)
 
-			glBindTexture(mode, _textureName)
+			glBindTexture(texture_mode, _textureName)
 
 			glPixelStorei(GL_UNPACK_ALIGNMENT,1)
-			glTexImage2D(mode, 0, 3, TextureBitmap.GetWidth(), TextureBitmap.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, image)
-			glTexParameterf(mode, GL_TEXTURE_WRAP_S, GL_CLAMP)
-			glTexParameterf(mode, GL_TEXTURE_WRAP_T, GL_CLAMP)
-			glTexParameterf(mode, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
-			glTexParameterf(mode, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+			glTexImage2D(texture_mode, 0, 3, TextureBitmap.GetWidth(), TextureBitmap.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, image)
+			glTexParameterf(texture_mode, GL_TEXTURE_WRAP_S, GL_CLAMP)
+			glTexParameterf(texture_mode, GL_TEXTURE_WRAP_T, GL_CLAMP)
+			glTexParameterf(texture_mode, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+			glTexParameterf(texture_mode, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
 			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
 
 			glColor4f( 1, 1, 1, 1 ) # to ensure the image isn't "color corrected" :)
