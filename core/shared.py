@@ -27,10 +27,10 @@ def deprecated(func):
     newFunc.__dict__.update(func.__dict__)
     return newFunc
 
-@deprecated
+#@deprecated incompatible with python 2.3
 def GetNextNodeID(): # those are deprecated
 	pass
 
-@deprecated
+#@deprecated
 def GetNextConnectionID():
 	pass
