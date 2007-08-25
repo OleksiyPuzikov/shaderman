@@ -775,9 +775,11 @@ class MainFrame(wx.Frame):
 	self.brickMenu = None
 	self.brickMenuArr = {}
 	
-	self.currentMode = "Renderman SL" # should load from the settings
-        self._setMenu()
-	self.ActuallySwitchMode()
+	# self.currentMode = "Renderman SL" # should load from the settings
+	# self._setMenu()
+	# self.ActuallySwitchMode()
+	self.currentMode = ""
+	self._setMenu()
 
 	aTable = wx.AcceleratorTable([
 				#(wx.ACCEL_NORMAL, ord('M'), self.ID_MINIM),
@@ -1214,8 +1216,10 @@ class MainFrame(wx.Frame):
 	del connections[:]
 	del panels[:]
 	del nodes[:]
+	del groups[:]
 	node.Node._instance_count = 0
 	node.Connection._instance_count = 0
+	Group._instance_count = 0
 	self.c.Refresh(False)
 
     def JustLoadTheData(self):
@@ -1223,6 +1227,10 @@ class MainFrame(wx.Frame):
 	del connections[:]
 	del panels[:]
 	del nodes[:]
+	del groups[:]
+	node.Node._instance_count = 0
+	node.Connection._instance_count = 0
+	Group._instance_count = 0
 	
 	res = False
 	
@@ -1403,7 +1411,9 @@ if __name__ == '__main__':
 		frm.SetTitle("%s - %s" % (frm.scenename, productname))
 		frm.filehistory.AddFileToHistory(frm.scenename)
 		frm.UpdateFileHistoryArray()
-	# else: activate the default mode here... this will speedup the load time
+	else:
+		frm.currentMode = "Renderman SL" # should load from the settings
+		frm.ActuallySwitchMode()
 	
 	app.MainLoop()
 
