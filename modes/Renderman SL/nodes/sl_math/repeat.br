@@ -4,7 +4,7 @@
  <help>Repeat(x,freq) based on Steve May's RManNotes</help>
  <in>
 	<param name="a" type="float" default="0" />
-	<param name="freq" type="floar" default="1" />
+	<param name="freq" type="float" default="1" />
  </in>
  <out>
 	<param name="result" type="float">mod( ${a} * ${freq}, 1)</param>
