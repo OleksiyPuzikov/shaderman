@@ -1,4 +1,4 @@
-""" Defines the visual part of core: NodePanel and Arrow classes.
+""" Defines the visual part of core: NodePanel, Group and Arrow classes.
 
 Here we're using OpenGL to draw nodes and connections between them. Note the source code is completely PEP8-incompatible; 
 there's a desperate need to refactor the function names et al...
@@ -19,6 +19,11 @@ except ImportError:
 	print "The OpenGL extensions do not appear to be installed."
 	print "This application cannot run."
 	sys.exit(1)
+	
+imageCache = {}
+
+def clearImageCache():
+	imageCache.clear()
 
 class NodePanel(object):
 	def __init__(self, parent, x=100, y=100, showParameters = True, showPreview = False, iconicMode = False):
@@ -55,8 +60,13 @@ class NodePanel(object):
 		self.width = width
 		self.height = height
 		
+		self.ClearCache() # is this enough? no.
+		
 	def inside(self, ax, ay):
 		return (ax in range(self.x, self.x+self.width)) and ((ay in range(self.y, self.y+self.height)))
+	
+	def ClearCache(self):
+		imageCache[self.node.id] = None
 		
 	def paint(self):
 		GL_TEXTURE_RECTANGLE_ARB = 0x84F5
@@ -79,8 +89,17 @@ class NodePanel(object):
 		
 
 	 	glEnable(mode)
-		TextureBitmap = node_draw.PaintForm(self.node, 0, 0, wx.ClientDC(self.owner))
-		image = wx.ImageFromBitmap(TextureBitmap).GetData()
+		
+		if imageCache.get(self.node.id, None) == None:
+			#print "miss"
+			TextureBitmap = node_draw.PaintForm(self.node, 0, 0, wx.ClientDC(self.owner))
+			image = wx.ImageFromBitmap(TextureBitmap) #.GetData()
+			imageCache[self.node.id] = image
+		else:
+			#print "cached"
+			image = imageCache[self.node.id]
+			
+		#image = wx.ImageFromBitmap(TextureBitmap).GetData()
 			
 		# Create Texture
 		_textureName = 0
@@ -89,7 +108,7 @@ class NodePanel(object):
 		glBindTexture(mode, _textureName)
 			
 		glPixelStorei(GL_UNPACK_ALIGNMENT,1)
-		glTexImage2D(mode, 0, 3, TextureBitmap.GetWidth(), TextureBitmap.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, image)
+		glTexImage2D(mode, 0, 3, image.GetWidth(), image.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, image.GetData())
 		glTexParameterf(mode, GL_TEXTURE_WRAP_S, GL_CLAMP)
 		glTexParameterf(mode, GL_TEXTURE_WRAP_T, GL_CLAMP)
 		glTexParameterf(mode, GL_TEXTURE_MAG_FILTER, GL_NEAREST)

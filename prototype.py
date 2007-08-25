@@ -8,6 +8,7 @@ import inspect
 curpath = os.path.dirname(inspect.getfile(sys._getframe(0)))
 if curpath=="":
 	curpath=os.getcwd()
+#print curpath
 sys.path.append(curpath)
 
 import wx
@@ -18,7 +19,8 @@ productname = "ShaderMan.Next"
 try:
 	from OpenGL.GL import *
 except ImportError:
-	print("OpenGL extensions for Python do not appear to be installed.\nThis application cannot run.", "Can't start %s" % productname)
+	print "The OpenGL extensions do not appear to be installed."
+	print "This application cannot run."
 	sys.exit(1)
 
 from core import node # non-visual elements of DAG
@@ -1220,6 +1222,7 @@ class MainFrame(wx.Frame):
 	node.Node._instance_count = 0
 	node.Connection._instance_count = 0
 	Group._instance_count = 0
+	clearImageCache()
 	self.c.Refresh(False)
 
     def JustLoadTheData(self):
@@ -1231,6 +1234,7 @@ class MainFrame(wx.Frame):
 	node.Node._instance_count = 0
 	node.Connection._instance_count = 0
 	Group._instance_count = 0
+	clearImageCache()
 	
 	res = False
 	
