@@ -225,7 +225,7 @@ def PaintForm(anode, left, top, dc):
 		mdc.DrawText(pname, headerh, dh+count*headerh)
 		
 		mdc.SetPen(wx.Pen(hcolor, 1))
-		mdc.SetBrush(wx.Brush(TypeColors[ptype]))
+		mdc.SetBrush(wx.Brush(TypeColors.get(ptype, wx.CYAN)))
 		mdc.DrawRectangle(dh, count*headerh+dh, ahh, ahh)
 		mdc.SetBrush(wx.Brush(color))
 		
@@ -243,7 +243,7 @@ def PaintForm(anode, left, top, dc):
 		ahh = headerh-dh*2
 		
 		mdc.SetPen(wx.Pen(hcolor, 1))
-		mdc.SetBrush(wx.Brush(TypeColors[ptype]))
+		mdc.SetBrush(wx.Brush(TypeColors.get(ptype, wx.CYAN)))
 		mdc.DrawRectangle(width-dh-ahh, count*headerh+dh, ahh, ahh)
 		mdc.SetBrush(wx.Brush(color))
 		
