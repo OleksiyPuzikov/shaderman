@@ -272,7 +272,21 @@ class Group(object):
 			self.paintAsPanel()
 			
 	def paintAsPanel(self):
-		pass
+		if len(self.panels):
+			w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
+			
+			glDisable(texture_mode)
+			glColor4f( 161/255.0, 223/255.0, 149/255.0, 1 )
+
+			selectionBorder = 5 # ... and size
+			glBegin( GL_QUADS )
+
+			#glVertex2i( minx-selectionBorder, miny-h )
+			#glVertex2i( maxx+selectionBorder, miny-h )
+			#glVertex2i( maxx+selectionBorder, miny )
+			#glVertex2i( minx-selectionBorder, miny )
+			
+			glEnd()
 		
 	def paintAsExpanded(self):
 		if len(self.panels):
@@ -284,7 +298,7 @@ class Group(object):
 			maxy = max([(p.y+p.height) for p in self.panels])
 			
 			glDisable(texture_mode)
-			glColor4f( 161/255.0, 223/255.0, 149/255.0, 1 ) # hardcoded selection color
+			glColor4f( 161/255.0, 223/255.0, 149/255.0, 1 )
 
 			selectionBorder = 5 # ... and size
 			glBegin( GL_QUADS )
