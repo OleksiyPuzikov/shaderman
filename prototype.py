@@ -147,10 +147,12 @@ class NodeCanvasBase(glcanvas.GLCanvas):
         self.OnDraw()
 	
     def OnContextMenu(self, event):
+	# connection menu
 	self.popupID1 = wx.NewId()
 	self.popupID2 = wx.NewId()
 	self.Bind(wx.EVT_MENU, self.OnMenuDeleteConnection, id=self.popupID1)
 
+	# panel menu
 	self.popupID3 = wx.NewId()
 	self.popupID4 = wx.NewId()
 	self.popupID5 = wx.NewId()
@@ -161,6 +163,13 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	self.Bind(wx.EVT_MENU, self.OnMenuSwitchIcon, id=self.popupID5)
 	self.Bind(wx.EVT_MENU, self.OnMenuEditCode, id=self.popupID6)
 	self.Bind(wx.EVT_MENU, self.OnMenuCreateGroup, id=self.popupID7)
+	
+	# group menu
+	self.popupID8 = wx.NewId()
+	self.popupID9 = wx.NewId()
+	
+	self.Bind(wx.EVT_MENU, self.OnMenuSwitchGroupParameters, id=self.popupID8)
+	self.Bind(wx.EVT_MENU, self.OnMenuSwitchGroupExpanded, id=self.popupID9)
 
 	# different menus for different places to click
 	
@@ -169,10 +178,19 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 	x, y = pos
 	self.menuConnection = None
 	self.menuPanel = None
+	self.menuGroup = None
+	
+	menuType = 0 # 0=insert brick; 1=group operations; 2=panel operations; 3=connection operations
+	
+	for g in groups:
+		if g.insideHeader(x, y):
+			self.menuGroup = g
+			menuType = 1
 	
 	for e in panels:
 		if e.inside(x, y):
 			self.menuPanel = e
+			menuType = 2
 			# There can be multiple outputs from the single out cell, so we don't support it now. Definitely will in the future, so TODO.
 			
 			#outtest = node_draw.IsArrowStart(e.node, wx.ClientDC(self), x, y)
@@ -188,9 +206,11 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 				connection = e.node.in_connections.get(pname, None)
 				if (connection != None): # there's connection
 					self.menuConnection = connection # we somehow need to pass the information on the selected connection outside...
+					menuType = 3
 
 	menu = wx.Menu()
-	if (self.menuConnection != None):
+	
+	if menuType == 3:
 		item = wx.MenuItem(menu, self.popupID1, "Delete connection")
 		menu.AppendItem(item)
 		item.Enable(True)
@@ -201,7 +221,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 		menu.AppendItem(item)
 		item.Enable(False)
 	
-	else: # we right-clicked inside node, but not on the connection end
+	if menuType == 2:
 		if self.menuPanel != None: # we've got the panel selected, so we show it's menu
 			item = wx.MenuItem(menu, -1, self.menuPanel.node.name)
 			menu.AppendItem(item)
@@ -235,13 +255,43 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 			item = wx.MenuItem(menu, self.popupID6, "Edit code")
 			menu.AppendItem(item)
 			
-		else:
-			menu = self.parent.brickMenu
+	if menuType == 1:
+		if self.menuGroup != None:
+			item = wx.MenuItem(menu, -1, "group%s" % self.menuGroup.id)
+			menu.AppendItem(item)
+			item.Enable(False)
+			
+			menu.AppendSeparator()
+			
+			item = wx.MenuItem(menu, self.popupID8, "Show parameters", kind=wx.ITEM_CHECK)
+			menu.AppendItem(item)
+			item.Check(self.menuGroup.showParameters)
+			item.Enable(True)
+			
+			item = wx.MenuItem(menu, self.popupID9, "Show expanded", kind=wx.ITEM_CHECK)
+			menu.AppendItem(item)
+			item.Check(self.menuGroup.expanded)
+			item.Enable(True)
+			
+	if menuType == 0:
+		menu = self.parent.brickMenu
 				
 	self.PopupMenu(menu)
 	if menu is not self.parent.brickMenu:
 		menu.Destroy()
 	self.Refresh(True)
+		
+    def OnMenuSwitchGroupParameters(self, event):
+	if self.menuGroup != None:
+		self.menuGroup.showParameters = event.Checked()
+		print self.menuGroup.showParameters
+		self.Refresh(True)
+    
+    def OnMenuSwitchGroupExpanded(self, event):
+	if self.menuGroup != None:
+		self.menuGroup.expanded = event.Checked()
+		print self.menuGroup.expanded
+		self.Refresh(True)
 		
     def OnMenuSwitchIcon(self, event):
 	if self.menuPanel != None:
