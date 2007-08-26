@@ -793,9 +793,9 @@ class MainFrame(wx.Frame):
 	self.brickMenu = None
 	self.brickMenuArr = {}
 	
-	# self.currentMode = "Renderman SL" # should load from the settings
-	# self._setMenu()
-	# self.ActuallySwitchMode()
+	#self.currentMode = "Renderman SL" # should load from the settings
+	#self._setMenu()
+	#self.ActuallySwitchMode()
 	self.currentMode = ""
 	self._setMenu()
 
@@ -1270,7 +1270,7 @@ class MainFrame(wx.Frame):
 		
 		res = True
 	finally:
-		self.c.Refresh(False)
+		self.c.Refresh(True)
 		return res
     
     def OnOpenDocument(self, event):
@@ -1422,9 +1422,11 @@ if __name__ == '__main__':
 		frm.SetTitle("%s - %s" % (frm.scenename, productname))
 		frm.filehistory.AddFileToHistory(frm.scenename)
 		frm.UpdateFileHistoryArray()
+		frm.c.Refresh(True)
 	else:
 		frm.currentMode = "Renderman SL" # should load from the settings
 		frm.ActuallySwitchMode()
+		frm.c.Refresh(True)
 	
 	app.MainLoop()
 

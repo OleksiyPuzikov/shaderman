@@ -93,12 +93,10 @@ class NodePanel(object):
 	 	glEnable(texture_mode)
 		
 		if imageCache.get(self.node.id, None) == None:
-			#print "miss"
 			TextureBitmap = node_draw.PaintForm(self.node, 0, 0, wx.ClientDC(self.owner))
 			image = wx.ImageFromBitmap(TextureBitmap) #.GetData()
 			imageCache[self.node.id] = image
 		else:
-			#print "cached"
 			image = imageCache[self.node.id]
 			
 		#image = wx.ImageFromBitmap(TextureBitmap).GetData()
@@ -223,7 +221,7 @@ class Group(object):
 
 	_instance_count = 0
 
-	def __init__(self, parent):
+	def __init__(self, parent, showParameters = True, expanded = True):
 		Group._instance_count += 1
 		self.id = str(Group._instance_count)
 		self.owner = parent
@@ -231,6 +229,8 @@ class Group(object):
 		self.panels = []
 		
 		self.delta = (0,0)
+		self.showParameters = showParameters
+		self.expanded = expanded
 
 	def AddPanel(self, apanel):
 		self.panels.append(apanel)
@@ -265,8 +265,17 @@ class Group(object):
 	def getTop(self):
 		w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
 		return min([p.y for p in self.panels])-h
-		
+	
 	def paint(self):
+		if self.expanded:
+			self.paintAsExpanded()
+		else:
+			self.paintAsPanel()
+			
+	def paintAsPanel(self):
+		pass
+		
+	def paintAsExpanded(self):
 		if len(self.panels):
 			w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
 			
