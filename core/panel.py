@@ -242,7 +242,6 @@ class Group(object):
 		return s
 		
 	def insideHeader(self, ax, ay):
-		#print "checking..."
 		if len(self.panels):
 			w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
 			
