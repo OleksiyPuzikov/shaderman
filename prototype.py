@@ -412,6 +412,14 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 		self.selection = None
 		self.temparrow = None
 			
+		for g in groups:
+			if g.insideHeader(self.x, self.y):
+				self.selected = g
+				dx = self.x - g.getLeft()
+				dy = self.y - g.getTop()
+				self.selected.delta = ((dx, dy))
+				return
+			
 		for e in panels:
 			if e.inside(self.x, self.y):
 				if -1 == node_draw.IsArrowStart(e.node, wx.ClientDC(self), self.x, self.y):
@@ -419,7 +427,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 					dx = self.x - e.x
 					dy = self.y - e.y
 					self.selected.delta = ((dx, dy))
-					self.selected.originalClick = (e.x, e.y)
+					#self.selected.originalClick = (e.x, e.y)
 					if e not in self.markedPanels:
 						del self.markedPanels[:]
 						self.markedPanels.append(e)
@@ -567,13 +575,21 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 				return
 			
 		if self.selected != None:
-			self.selected.x = self.x-self.selected.delta[0]
-			self.selected.y = self.y-self.selected.delta[1]
-			if self.selected in self.markedPanels: # move all the other panels as well
-				for p in self.markedPanels:
-					if p != self.selected:
-						p.x += (self.selected.x-self.lastx+self.selected.delta[0]) 
-						p.y += (self.selected.y-self.lasty+self.selected.delta[1]) 
+			if isinstance(self.selected, NodePanel):
+				self.selected.x = self.x-self.selected.delta[0]
+				self.selected.y = self.y-self.selected.delta[1]
+				if self.selected in self.markedPanels: # move all the other panels as well
+					for p in self.markedPanels:
+						if p != self.selected:
+							p.x += (self.selected.x-self.lastx+self.selected.delta[0]) 
+							p.y += (self.selected.y-self.lasty+self.selected.delta[1]) 
+			if isinstance(self.selected, Group):
+				x = self.x-self.selected.delta[0]
+				y = self.y-self.selected.delta[1]
+				for p in self.selected.panels:
+					p.x += (x-self.lastx+self.selected.delta[0]) 
+					p.y += (y-self.lasty+self.selected.delta[1]) 
+				
 			self.Refresh(False)
 		else:
 			if self.selection != None:
@@ -760,8 +776,8 @@ class MainFrame(wx.Frame):
         self.tree.SetImageList(il)
         self.il = il
 
-	self.tree.SetBackgroundColour(bgColor)
-	self.tree.Refresh(True)
+	#self.tree.SetBackgroundColour(bgColor)
+	#self.tree.Refresh(True)
 	
         self.tree.Bind(wx.EVT_LEFT_DCLICK, self.OnTreeLeftDClick)
 	
@@ -865,7 +881,6 @@ class MainFrame(wx.Frame):
 			if not (mmenu.IsChecked()):
 				mmenu.Check(True)
 			
-	#root = opj('%s/modes/%s/nodes' % (os.getcwd(), self.currentMode))
 	root = opj('%s/modes/%s/nodes' % (curpath, self.currentMode))
 	
 	if self.brickMenu != None:
@@ -994,7 +1009,6 @@ class MainFrame(wx.Frame):
 	
 	for d in directories:
 		nid = wx.NewId()
-		#dd = d.replace(opj('%s/modes/' % os.getcwd()), "")
 		dd = d
 	        item = wx.MenuItem(menud, nid, dd, kind = wx.ITEM_RADIO)
         	menud.AppendItem(item)
@@ -1009,15 +1023,12 @@ class MainFrame(wx.Frame):
 	
         self.mainmenu.Append(menud, "&Mode")
 
-	# end
-
         menu2 = wx.Menu()
         menu2.Append(wx.ID_HELP, "Help")
-        #menu2.AppendSeparator()
         menu2.Append(wx.ID_ABOUT, "About...")
         self.mainmenu.Append(menu2, "&Help")
-        
-        self.SetMenuBar(self.mainmenu)
+	
+	self.SetMenuBar(self.mainmenu)
 
         if wx.Platform == "__WXMAC__":
             wx.App.SetMacAboutMenuItemId(wx.ID_ABOUT)
@@ -1045,9 +1056,6 @@ class MainFrame(wx.Frame):
 	self.Bind(wx.EVT_MENU,  self.OnPreferences, id=wx.ID_PREFERENCES)
 	self.Bind(wx.EVT_MENU,  self.OnLayoutNodes, id=self.ID_LAYOUTNODES)
 	
-	# file history binding
-        #self.Bind(wx.EVT_MENU_RANGE, self.OnFileHistory, id=wx.ID_FILE1, id2=wx.ID_FILE1 + 19)
-
 	## EDIT MENU
         #self.Bind(wx.EVT_MENU, self.OnUndo, id=wx.ID_UNDO)
         #self.Bind(wx.EVT_MENU, self.OnRedo, id=wx.ID_REDO)
@@ -1057,7 +1065,6 @@ class MainFrame(wx.Frame):
         ## HELP MENU
         self.Bind(wx.EVT_MENU, self.OnAbout, id=wx.ID_ABOUT)
         self.Bind(wx.EVT_MENU, self.OnHelp, id=wx.ID_HELP)
-        #self.Bind(wx.EVT_MENU, self.OnCheckVersion, id=ID_CHECK_VERSION)
 	
     def OnLayoutNodes(self, event): # apparently, doesn't work as expected. But left here for [possible] experiments in the future.
 	import core.topo
