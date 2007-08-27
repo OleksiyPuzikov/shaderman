@@ -284,13 +284,13 @@ class NodeCanvasBase(glcanvas.GLCanvas):
     def OnMenuSwitchGroupParameters(self, event):
 	if self.menuGroup != None:
 		self.menuGroup.showParameters = event.Checked()
-		print self.menuGroup.showParameters
 		self.Refresh(True)
     
     def OnMenuSwitchGroupExpanded(self, event):
 	if self.menuGroup != None:
 		self.menuGroup.expanded = event.Checked()
-		print self.menuGroup.expanded
+		self.menuGroup.calcXY()
+		self.menuGroup.updatePanels()
 		self.Refresh(True)
 		
     def OnMenuSwitchIcon(self, event):
@@ -637,8 +637,10 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 				x = self.x-self.selected.delta[0]
 				y = self.y-self.selected.delta[1]
 				for p in self.selected.panels:
-					p.x += (x-self.lastx+self.selected.delta[0]) 
-					p.y += (y-self.lasty+self.selected.delta[1]) 
+					p.x += (x-self.lastx+self.selected.delta[0])
+					p.y += (y-self.lasty+self.selected.delta[1])
+				self.selected.x += (x-self.lastx+self.selected.delta[0])
+				self.selected.y += (y-self.lasty+self.selected.delta[1])
 				
 			self.Refresh(False)
 		else:

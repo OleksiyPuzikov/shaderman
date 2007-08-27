@@ -38,6 +38,8 @@ class NodePanel(object):
 		self.width = 100
 		self.height = 150
 		
+		self.visible = True
+		
 		self.delta = (0,0)
 		#self.originalClick = (0, 0)
 		self.node = None
@@ -74,6 +76,9 @@ class NodePanel(object):
 		imageCache[self.node.id] = None
 		
 	def paint(self):
+		if not self.visible:
+			return
+		
 		if self in self.owner.c.markedPanels:
 		 	#glDisable(GL_TEXTURE_2D) # to ensure the image isn't "color corrected" by texture :)
 			glDisable(texture_mode)
@@ -228,9 +233,26 @@ class Group(object):
 
 		self.panels = []
 		
+		self.x = 0
+		self.y = 0
+		
 		self.delta = (0,0)
 		self.showParameters = showParameters
 		self.expanded = expanded
+		
+	def calcXY(self):
+		if len(self.panels):
+			minx = min([p.x for p in self.panels])
+			maxx = max([(p.x+p.width) for p in self.panels])
+			miny = min([p.y for p in self.panels])
+			maxy = max([(p.y+p.height) for p in self.panels])
+			self.x = minx+(maxx-minx)/2
+			self.y = miny+(maxy-miny)/2
+			
+	def updatePanels(self):
+		if len(self.panels):
+			for p in self.panels:
+				p.visible = self.expanded
 
 	def AddPanel(self, apanel):
 		self.panels.append(apanel)
@@ -247,12 +269,17 @@ class Group(object):
 			
 			selectionBorder = 5 # ... and size
 			
-			minx = min([p.x for p in self.panels])-selectionBorder
-			maxx = max([(p.x+p.width) for p in self.panels])+selectionBorder
-			maxy = min([p.y for p in self.panels])
-			miny = maxy-h
-			
-			#print ax, ay, minx, maxx, miny, maxy
+			if self.expanded:
+				minx = min([p.x for p in self.panels])-selectionBorder
+				maxx = max([(p.x+p.width) for p in self.panels])+selectionBorder
+				maxy = min([p.y for p in self.panels])
+				miny = maxy-h
+			else:
+				w1 = w + 2*h + 4*dh
+				minx = self.x
+				miny = self.y
+				maxx = self.x+w1
+				maxy = self.y+h
 			
 			return (ax in range(minx, maxx)) and ((ay in range(miny, maxy)))
 		else:
@@ -275,18 +302,59 @@ class Group(object):
 		if len(self.panels):
 			w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
 			
+			w1 = w + 2*h + 4*dh
+			
 			glDisable(texture_mode)
 			glColor4f( 161/255.0, 223/255.0, 149/255.0, 1 )
 
 			selectionBorder = 5 # ... and size
 			glBegin( GL_QUADS )
 
-			#glVertex2i( minx-selectionBorder, miny-h )
-			#glVertex2i( maxx+selectionBorder, miny-h )
-			#glVertex2i( maxx+selectionBorder, miny )
-			#glVertex2i( minx-selectionBorder, miny )
+			glVertex2i( self.x, self.y )
+			glVertex2i( self.x+w1, self.y )
+			glVertex2i( self.x+w1, self.y+h )
+			glVertex2i( self.x, self.y+h )
 			
 			glEnd()
+			
+		 	glEnable(texture_mode) # warning - code dublication
+			TextureBitmap = node_draw.PaintGroup(self, wx.ClientDC(self.owner))
+			image = wx.ImageFromBitmap(TextureBitmap).GetData()
+
+			# Create Texture
+			_textureName = 0
+			_textureName = glGenTextures(1)
+
+			glBindTexture(texture_mode, _textureName)
+
+			glPixelStorei(GL_UNPACK_ALIGNMENT,1)
+			glTexImage2D(texture_mode, 0, 3, TextureBitmap.GetWidth(), TextureBitmap.GetHeight(), 0, GL_RGB, GL_UNSIGNED_BYTE, image)
+			glTexParameterf(texture_mode, GL_TEXTURE_WRAP_S, GL_CLAMP)
+			glTexParameterf(texture_mode, GL_TEXTURE_WRAP_T, GL_CLAMP)
+			glTexParameterf(texture_mode, GL_TEXTURE_MAG_FILTER, GL_NEAREST)
+			glTexParameterf(texture_mode, GL_TEXTURE_MIN_FILTER, GL_NEAREST)
+			glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL)
+
+			glColor4f( 1, 1, 1, 1 ) # to ensure the image isn't "color corrected" :)
+
+			glBegin( GL_QUADS )
+
+			glTexCoord2i(0, 0)
+			glVertex2i( self.x+h, self.y )
+
+			glTexCoord2i(w, 0)
+			glVertex2i( self.x+h+w, self.y )
+
+			glTexCoord2i(w, h)
+			glVertex2i( self.x+h+w, self.y+h )
+
+			glTexCoord2i(0, h)
+			glVertex2i( self.x+h, self.y+h )
+
+			glEnd()
+
+			glDeleteTextures(_textureName)
+
 		
 	def paintAsExpanded(self):
 		if len(self.panels):
