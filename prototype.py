@@ -8,7 +8,6 @@ import inspect
 curpath = os.path.dirname(inspect.getfile(sys._getframe(0)))
 if curpath=="":
 	curpath=os.getcwd()
-#print curpath
 sys.path.append(curpath)
 
 import wx
