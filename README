@@ -9,8 +9,8 @@ The code is developed on Fedora Core 5 Linux and Mac OS X 10.4.9 and tested (by 
 
 See INSTALL for installation instructions, and LIMITATIONS for, er, limitations :) Obviously, LICENSE contains the license.
 
-To run, switch to the ShaderMan.Next directory, then run prototype.py either by double-clicking
-on it (if you're on Windows) or by running "python prototype.py" in terminal on Linux and Mac OS X. 
+You can run prototype.py either by double-clicking on it (if you're on Windows) or using "python prototype.py" 
+in terminal on Linux and Mac OS X. I do have plans to provide the proper binary releases, but this isn't my high priority now.
 
 On Mac OS X, if you're using Python 2.3 (or, if you never bothered to upgrade Python or
 don't know how to do it), the proper command would be "pythonw prototype.py". Note pythonw is
