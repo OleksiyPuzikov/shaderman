@@ -70,6 +70,8 @@ class NodePanel(object):
 		self.ClearCache() # is this enough? no.
 		
 	def inside(self, ax, ay):
+		if not self.visible:
+			return False
 		return (ax in range(self.x, self.x+self.width)) and ((ay in range(self.y, self.y+self.height)))
 	
 	def ClearCache(self):
