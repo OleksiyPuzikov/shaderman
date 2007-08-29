@@ -39,6 +39,7 @@ class NodePanel(object):
 		self.height = 150
 		
 		self.visible = True
+		self.group = None
 		
 		self.delta = (0,0)
 		#self.originalClick = (0, 0)
@@ -67,7 +68,7 @@ class NodePanel(object):
 		self.width = width
 		self.height = height
 		
-		self.ClearCache() # is this enough? no.
+		self.ClearCache()
 		
 	def inside(self, ax, ay):
 		if not self.visible:
@@ -190,11 +191,22 @@ class Arrow(object):
 	
 	def paint(self):
 		if self.connection != None:
-			x1 = self.connection.inputNode.panel.x+self.connection.inputNode.panel.width
-			y1 = self.connection.inputNode.panel.y+self.hoffset1
+			if not self.connection.inputNode.panel.visible and not self.connection.outputNode.panel.visible:
+				return
 			
-			x2 = self.connection.outputNode.panel.x
-			y2 = self.connection.outputNode.panel.y+self.hoffset2
+			if self.connection.inputNode.panel.visible:
+				x1 = self.connection.inputNode.panel.x+self.connection.inputNode.panel.width
+				y1 = self.connection.inputNode.panel.y+self.hoffset1
+			else:
+				x1 = self.connection.inputNode.panel.group.x+self.connection.inputNode.panel.group.width
+				y1 = self.connection.inputNode.panel.group.y+self.connection.inputNode.panel.group.height/2
+			
+			if self.connection.outputNode.panel.visible:
+				x2 = self.connection.outputNode.panel.x
+				y2 = self.connection.outputNode.panel.y+self.hoffset2
+			else:
+				x2 = self.connection.outputNode.panel.group.x
+				y2 = self.connection.outputNode.panel.group.y+self.connection.outputNode.panel.group.height/2
 		else:
 			x1 = self.owner.tax
 			y1 = self.owner.tay
@@ -237,6 +249,8 @@ class Group(object):
 		
 		self.x = 0
 		self.y = 0
+		self.width = 0
+		self.height = 0
 		
 		self.delta = (0,0)
 		self.showParameters = showParameters
@@ -251,6 +265,10 @@ class Group(object):
 			self.x = minx+(maxx-minx)/2
 			self.y = miny+(maxy-miny)/2
 			
+			w, h, dh, w1 = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
+			self.width = w1
+			self.height = h
+			
 	def updatePanels(self):
 		if len(self.panels):
 			for p in self.panels:
@@ -258,6 +276,7 @@ class Group(object):
 
 	def AddPanel(self, apanel):
 		self.panels.append(apanel)
+		apanel.group = self
 
 	def __repr__(self): # serialize the state into file
 		s = """group%s = Group(self)\ngroups.append(group%s)\n""" % (self.id, self.id)
@@ -267,7 +286,7 @@ class Group(object):
 		
 	def insideHeader(self, ax, ay):
 		if len(self.panels):
-			w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
+			w, h, dh, w1 = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
 			
 			selectionBorder = 5 # ... and size
 			
@@ -277,7 +296,7 @@ class Group(object):
 				maxy = min([p.y for p in self.panels])
 				miny = maxy-h
 			else:
-				w1 = w + 2*h + 4*dh
+				#w1 = w + 2*h + 4*dh
 				minx = self.x
 				miny = self.y
 				maxx = self.x+w1
@@ -291,7 +310,7 @@ class Group(object):
 		return min([p.x for p in self.panels])-selectionBorder
 		
 	def getTop(self):
-		w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
+		w, h, dh, w1 = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
 		return min([p.y for p in self.panels])-h
 	
 	def paint(self):
@@ -302,9 +321,9 @@ class Group(object):
 			
 	def paintAsPanel(self):
 		if len(self.panels):
-			w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
+			w, h, dh, w1 = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
 			
-			w1 = w + 2*h + 4*dh
+			#w1 = w + 2*h + 4*dh
 			
 			glDisable(texture_mode)
 			glColor4f( 161/255.0, 223/255.0, 149/255.0, 1 )
@@ -360,7 +379,7 @@ class Group(object):
 		
 	def paintAsExpanded(self):
 		if len(self.panels):
-			w, h, dh = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
+			w, h, dh, w1 = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
 			
 			minx = min([p.x for p in self.panels])
 			maxx = max([(p.x+p.width) for p in self.panels])

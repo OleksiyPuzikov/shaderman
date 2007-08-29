@@ -68,7 +68,9 @@ def CalcGroupSize(group, dc):
 	hh = dc.GetFullTextExtent("group%s" % group.id)[1]
 	dh = (headerh-hh)/2
 	
-	return width, headerh, dh
+	w1 = width + 2*headerh + 4*dh
+	
+	return width, headerh, dh, w1
 
 def CalcMinMaxSize(node, dc):
 	itemcount = max(len(node.in_params), len(node.out_params))
@@ -151,7 +153,7 @@ def PaintGroup(group, dc):
 	font = wx.Font(fontsize, wx.FONTFAMILY_SWISS, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_NORMAL)
 	mdc.SetFont(font)
 	
-	width, headerh, dh = CalcGroupSize(group, dc) # mdc?
+	width, headerh, dh, w1 = CalcGroupSize(group, dc) # mdc?
 	
 	bmp = wx.EmptyBitmap(width, headerh)
 	mdc.SelectObject(bmp)
