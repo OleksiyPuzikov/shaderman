@@ -467,6 +467,9 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 				dx = self.x - g.getLeft()
 				dy = self.y - g.getTop()
 				self.selected.delta = ((dx, dy))
+				if g not in self.markedPanels:
+					del self.markedPanels[:]
+					self.markedPanels.append(g)
 				return
 			
 		for e in panels:
@@ -476,7 +479,6 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 					dx = self.x - e.x
 					dy = self.y - e.y
 					self.selected.delta = ((dx, dy))
-					#self.selected.originalClick = (e.x, e.y)
 					if e not in self.markedPanels:
 						del self.markedPanels[:]
 						self.markedPanels.append(e)
@@ -584,7 +586,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 		self.selected = None
 		if self.selection != None:
 			del self.markedPanels[:]
-			for e in panels:
+			for e in panels+groups:
 				if (self.selection[0] < e.x) and (self.selection[2] > e.x+e.width) and (self.selection[1] < e.y) and (self.selection[3] > e.y+e.height):
 					self.markedPanels.append(e)
 			
@@ -640,6 +642,13 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 					p.y += (y-self.lasty+self.selected.delta[1])
 				self.selected.x += (x-self.lastx+self.selected.delta[0])
 				self.selected.y += (y-self.lasty+self.selected.delta[1])
+				if not self.selected.expanded:
+					if self.selected in self.markedPanels: # move all the other panels as well
+						for p in self.markedPanels:
+							if p != self.selected:
+								if not p in self.selected.panels: # because we moved'em already
+									p.x += (x-self.lastx+self.selected.delta[0]) 
+									p.y += (y-self.lasty+self.selected.delta[1])
 				
 			self.Refresh(False)
 		else:

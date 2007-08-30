@@ -322,10 +322,22 @@ class Group(object):
 	def paintAsPanel(self):
 		if len(self.panels):
 			w, h, dh, w1 = node_draw.CalcGroupSize(self, wx.ClientDC(self.owner))
-			
-			#w1 = w + 2*h + 4*dh
-			
+
 			glDisable(texture_mode)
+	
+			if self in self.owner.c.markedPanels:
+				glColor4f( 248/255.0, 206/255.0, 36/255.0, 0.5 ) # hardcoded selection color
+
+				selectionBorder = 5 # ... and size
+				glBegin( GL_QUADS )
+
+				glVertex2i( self.x-selectionBorder, self.y-selectionBorder )
+				glVertex2i( self.x+w1+selectionBorder, self.y-selectionBorder )
+				glVertex2i( self.x+w1+selectionBorder, self.y+h+selectionBorder )
+				glVertex2i( self.x-selectionBorder, self.y+h+selectionBorder )
+
+				glEnd()
+			
 			glColor4f( 161/255.0, 223/255.0, 149/255.0, 1 )
 
 			selectionBorder = 5 # ... and size
