@@ -338,7 +338,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 		
     def OnMenuCreateGroup(self, event):
 	if self.menuPanel != None:
-		group = Group(self)
+		group = Group(self.parent)
 		
 		ar = self.markedPanels
 		if self.menuPanel not in ar:
@@ -588,7 +588,8 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 			del self.markedPanels[:]
 			for e in panels+groups:
 				if (self.selection[0] < e.x) and (self.selection[2] > e.x+e.width) and (self.selection[1] < e.y) and (self.selection[3] > e.y+e.height):
-					self.markedPanels.append(e)
+					if e.visible:
+						self.markedPanels.append(e)
 			
 			self.selection = None
 		self.Refresh(False)
@@ -647,8 +648,13 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 						for p in self.markedPanels:
 							if p != self.selected:
 								if not p in self.selected.panels: # because we moved'em already
-									p.x += (x-self.lastx+self.selected.delta[0]) 
+									p.x += (x-self.lastx+self.selected.delta[0])
 									p.y += (y-self.lasty+self.selected.delta[1])
+									if isinstance(p, Group):
+										for pp in p.panels:
+											pp.x += (x-self.lastx+self.selected.delta[0])
+											pp.y += (y-self.lasty+self.selected.delta[1])
+
 				
 			self.Refresh(False)
 		else:

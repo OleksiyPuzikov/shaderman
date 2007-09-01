@@ -252,9 +252,14 @@ class Group(object):
 		self.width = 0
 		self.height = 0
 		
+		self.visible = True
+		
 		self.delta = (0,0)
 		self.showParameters = showParameters
 		self.expanded = expanded
+		
+	def refreshFont(self): # for compatibility with NodePanel...
+		pass
 		
 	def calcXY(self):
 		if len(self.panels):
