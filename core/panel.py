@@ -278,6 +278,11 @@ class Group(object):
 		if len(self.panels):
 			for p in self.panels:
 				p.visible = self.expanded
+				
+	def SwitchExpanded(self, value):
+		self.expanded = value
+		self.calcXY()
+		self.updatePanels()
 
 	def AddPanel(self, apanel):
 		self.panels.append(apanel)
@@ -287,6 +292,8 @@ class Group(object):
 		s = """group%s = Group(self)\ngroups.append(group%s)\n""" % (self.id, self.id)
 		for p in self.panels:
 			s += "group%s.AddPanel(node%s.panel)\n" % (self.id, p.node.id)
+		if not self.expanded:
+			s += "group%s.SwitchExpanded(False)\n" % (self.id)
 		return s
 		
 	def insideHeader(self, ax, ay):
