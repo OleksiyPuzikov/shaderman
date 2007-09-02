@@ -415,6 +415,10 @@ class NodeCanvasBase(glcanvas.GLCanvas):
 			self.parent.pform.AssignNode(node)
 			self.parent.pform.Show(True)
 			self.parent.pform.Raise()
+	
+	for g in groups:
+		if g.insideHeader(x, y):
+			g.SwitchExpanded(not g.expanded)
 			
     def CoordinateInsidePreview(self, x, y):
 	offx = self.size.width+self.panx
