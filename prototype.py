@@ -287,9 +287,10 @@ class NodeCanvasBase(glcanvas.GLCanvas):
     
     def OnMenuSwitchGroupExpanded(self, event):
 	if self.menuGroup != None:
-		self.menuGroup.expanded = event.Checked()
-		self.menuGroup.calcXY()
-		self.menuGroup.updatePanels()
+		self.menuGroup.SwitchExpanded(event.Checked())
+		#self.menuGroup.expanded = event.Checked()
+		#self.menuGroup.calcXY()
+		#self.menuGroup.updatePanels()
 		self.Refresh(True)
 		
     def OnMenuSwitchIcon(self, event):
