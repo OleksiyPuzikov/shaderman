@@ -1182,7 +1182,7 @@ class MainFrame(wx.Frame):
 		deffontsize = 10
 	
 	curfontsize = settings.get("fontsize", str(deffontsize))
-	self.preferences = [{'default': curfontsize, 'name': u'Font Size'}]
+	self.preferences = [{'default': curfontsize, 'name': u'Font Size', 'type': u'string'}]
 	
 	dlg = prefs.PropertiesFrame(None, self.preferences, title = "ShaderMan preferences")
 	dlg.Bind(wx.EVT_CLOSE, self.SavePreferences)
