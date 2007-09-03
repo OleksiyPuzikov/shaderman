@@ -8,55 +8,9 @@ This is a work in progress; I'm already using this for mode settings.
 """
 
 import wx
+from core.utils import *
 
 spacer = wx.Size(10, 20)
-
-import re
-
-vaNUMBER = r'\d+$'
-vaFLOAT = r'\d+\.\d+$'
-
-class PrefValidator(wx.PyValidator):
-
-     def __init__(self, regex = None):
-         wx.PyValidator.__init__(self)
-         self.regex = regex
-         if self.regex:
-             self.re = re.compile(regex)
-
-     def Clone(self):
-         return PrefValidator(self.regex)
-
-     def Validate(self, win):
-	 print "enter validate"
-         if not self.regex:
-             return True
-         window = self.GetWindow()
-         text = window.GetValue().strip()
-	 print self.re.match(text)
-         if self.re.match(text):
-             return True
-         else:
-             return False
-
-     def TransferToWindow(self):
-         return true
-
-     def TransferFromWindow(self):
-         return true
-
-class FloatValidator( wx.PyValidator ):
-        
-	def Clone (self):
-                return self.__class__()
-	
-        def Validate(self, window):
-                window = wx.PyTypeCast(window, "wx.TextCtrl")
-                try:
-                        value = float(window.GetValue())
-                        return true
-                except ValueError:
-                        return false
 
 class NodePropertyPanel(wx.Panel):
     def __init__(self, parent):
@@ -86,8 +40,6 @@ class TextEditPanel(NodePropertyPanel):
 	
 	sizer.Add( spacer )
 	
-	# validators doesn't work for wx.Frame, only for wx.Dialog?
-	#self.text = wx.TextCtrl( self, -1, value, size  = wx.Size( 56, 20 ), style = wx.TE_PROCESS_ENTER, validator = PrefValidator(vaFLOAT) )
 	self.text = wx.TextCtrl( self, -1, value, size  = wx.Size( 56, 20 ), style = wx.TE_PROCESS_ENTER )
 	sizer.Add( self.text, 1,  wx.EXPAND)
 	
@@ -95,8 +47,6 @@ class TextEditPanel(NodePropertyPanel):
 	
 	self.SetSizer( sizer )
 	
-        #self.text.Bind(wx.EVT_TEXT_ENTER, self.update_object ) # this crashes on Mac
-        #self.text.Bind(wx.EVT_KILL_FOCUS, self.update_object )
         self.text.Bind(wx.EVT_TEXT, self.update_object)
 	
     def update_object(self, event):
@@ -106,10 +56,15 @@ class TextEditPanel(NodePropertyPanel):
 	event.Skip()
 
 class RangeEditPanel(NodePropertyPanel):
-    def __init__(self, parent, label, value):
+    def __init__(self, parent, label, value, backupvalue = None):
 	self.label = label
 	self.value = value
 	self.parent = parent
+	if backupvalue == None:		
+		backupvalue = value
+	
+	if backupvalue == "0":
+		backupvalue = "1"
 	
         wx.Panel.__init__(self, parent, style=wx.BORDER_NONE)
 	
@@ -125,7 +80,7 @@ class RangeEditPanel(NodePropertyPanel):
 	
 	sizer.Add( spacer )
 
-	self.slider = wx.Slider( self, -1, float(self.value)*1000, -1000*float(self.value), 2000*float(self.value), size = wx.Size( 120, 20 ), style  = wx.SL_HORIZONTAL | wx.SL_AUTOTICKS )
+	self.slider = wx.Slider( self, -1, float(self.value)*1000, -1000*float(backupvalue), 2000*float(backupvalue), size = wx.Size( 120, 20 ), style  = wx.SL_HORIZONTAL | wx.SL_AUTOTICKS )
 	self.slider.SetTickFreq( 100, 1 )
 	self.slider.SetPageSize( 100 )
 	self.slider.SetLineSize( 10 )
@@ -174,15 +129,10 @@ class PropertiesFrame(wx.Frame):
 		
 		self.Freeze() # Disable screen updates on the parent control while we build the view
 		
-		for p in params:
-			if p["type"] == "float":
-				panel = RangeEditPanel(self, p["name"], p["default"])
-			else:
-				panel = TextEditPanel(self, p["name"], p["default"])
-			panel.AssignParameters(params)
-			
-			self.bigSizer.Add(wx.Size(-1, 5), 0, wx.EXPAND) # vertical spacer between the editors
-			self.bigSizer.Add(panel, 0, wx.EXPAND)
+		self.params = params
+		if params != None:
+			for p in self.params:
+				self.AddElement(p)
 		
 		self.Bind(wx.EVT_SIZE, self.OnSize)
 		
@@ -190,11 +140,51 @@ class PropertiesFrame(wx.Frame):
 		
 		self.Thaw() # Allow screen updates to occur again
 		
+		self.Bind(wx.EVT_CLOSE, self.OnClose)
+		
 	def OnSize(self, event):
 		w, h = self.GetClientSizeTuple()
 		for l in self.labels:
 			l.SetSizeHints(w/3, -1, -1, -1) #minw, minh, maxw, maxh
 		event.Skip()
+		
+	def AddElement(self, p):
+		if (p["type"] == "float") and (isNumber(p["default"])): # is a number
+			panel = RangeEditPanel(self, p["name"], p["default"], p["backup"])
+		else:
+			panel = TextEditPanel(self, p["name"], p["default"])
+		panel.AssignParameters(self.params)
+			
+		self.bigSizer.Add(wx.Size(-1, 5), 0, wx.EXPAND) # vertical spacer between the editors
+		self.bigSizer.Add(panel, 0, wx.EXPAND)
+		
+	def AssignNode(self, anode):
+		self.Freeze()
+		self.bigSizer.Clear(True)
+		del self.labels[:]
+		
+		self.params = anode.in_params
+		self.SetTitle(anode.name)
+		
+		for inp in self.params:
+			pname = str(inp["name"])
+			pvalue = str(inp["default"])
+			connection = anode.in_connections.get(pname, None)
+			if (connection == None): # there's no connection
+				self.AddElement(inp)
+		
+		#self.html.SetPage(node.help)
+		self.SetSizer(self.bigSizer)
+		
+		self.Thaw()
+		
+	def OnClose(self, event):
+		event.Veto()
+		self.Show(False)
+		
+	def CloseClick(self, event):
+		self.Show(False)
+		
 	
 if __name__ == '__main__': # test the code
 	

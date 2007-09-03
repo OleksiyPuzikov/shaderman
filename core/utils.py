@@ -4,6 +4,13 @@ import os
 import inspect
 import sys
 
+def isNumber(n):
+	try:
+		dummy = float(n)
+		return True
+	except ValueError:
+		return False
+
 def good_path(filename, remove=os.path.sep+"core"):
 	"""This will return the path to related filename"""
 	return os.path.join(os.path.dirname(inspect.getfile(sys._getframe(1))).replace(remove, ""), filename)

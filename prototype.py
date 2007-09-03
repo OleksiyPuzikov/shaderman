@@ -28,7 +28,9 @@ from core.panel import * # visual representations of DAG elements and connection
 from core.utils import * # some util functions I'm using
 from core.shared import * # global variables
 
-from core.properties import PropertiesFrame # window being used to edit properties of nodes; will be replaced with prefs_window.py when ready
+#from core.properties import PropertiesFrame # window being used to edit properties of nodes; will be replaced with prefs_window.py when ready
+import core.prefs_window as prefs
+from core.prefs_window import PropertiesFrame
 
 from core.edit_window import EditDialog # we're using pretty simple edit window to edit the source code for nodes
 
@@ -943,7 +945,11 @@ class MainFrame(wx.Frame):
 	evt.Skip()	
 	
     def OnCleanup(self, event):
-	del self.filehistory
+	#if isinstance(self, MainFrame):
+	try:
+		del self.filehistory
+	except:
+		pass
 	
     def ActuallySwitchMode(self):
 	# check if menu is switched
@@ -1174,8 +1180,6 @@ class MainFrame(wx.Frame):
 	event.Skip()
 	
     def OnPreferences(self, event):
-	import core.prefs_window as prefs
-	
 	if wx.Platform == "__WXMAC__":
 		deffontsize = 12
 	else:
