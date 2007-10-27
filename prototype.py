@@ -4,6 +4,7 @@ import os
 import glob
 import sys
 import inspect
+import logging
 
 curpath = os.path.dirname(inspect.getfile(sys._getframe(0)))
 if curpath=="":
@@ -146,6 +147,7 @@ class NodeCanvasBase(glcanvas.GLCanvas):
             self.InitGL()
             self.init = True
         self.OnDraw()
+	event.Skip()
 	
     def OnContextMenu(self, event):
 	# connection menu
