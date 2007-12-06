@@ -1,0 +1,112 @@
+self.currentMode = "Renderman SL"
+self.ActuallySwitchMode()
+
+node1 = node.Node(-1, "modes/Renderman SL/nodes/diffuse/lambert.br", factory = self.factory)
+nodes.append(node1)
+
+node2 = node.Node(-1, "modes/Renderman SL/nodes/specular/phong.br", factory = self.factory)
+nodes.append(node2)
+
+node3 = node.Node(-1, "modes/Renderman SL/nodes/modern_surface.br", factory = self.factory)
+nodes.append(node3)
+
+node4 = node.Node(-1, "modes/Renderman SL/nodes/noises/khnoise.br", factory = self.factory)
+nodes.append(node4)
+
+node5 = node.Node(-1, "modes/Renderman SL/nodes/noises/khnoise.br", factory = self.factory)
+nodes.append(node5)
+
+node6 = node.Node(-1, "modes/Renderman SL/nodes/noises/khnoise.br", factory = self.factory)
+nodes.append(node6)
+
+node7 = node.Node(-1, "modes/Renderman SL/nodes/fractal/fractal.br", factory = self.factory)
+nodes.append(node7)
+
+pnl = NodePanel(self, 127, 238, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node1)
+
+pnl = NodePanel(self, 140, 382, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node2)
+
+pnl = NodePanel(self, 395, 368, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node3)
+
+pnl = NodePanel(self, 186, 525, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node4)
+
+pnl = NodePanel(self, -102, 279, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node5)
+
+pnl = NodePanel(self, -90, 178, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node6)
+
+pnl = NodePanel(self, -276, 258, True, False, False)
+panels.append(pnl)
+pnl.assignNode(node7)
+
+connection1 = node.Connection(-1)
+connections.append(connection1)
+connection1.assignInput(node1, "color")
+connection1.assignOutput(node3, "Diffuse")
+
+connection2 = node.Connection(-1)
+connections.append(connection2)
+connection2.assignInput(node2, "color")
+connection2.assignOutput(node3, "Specular")
+
+connection3 = node.Connection(-1)
+connections.append(connection3)
+connection3.assignInput(node4, "result")
+connection3.assignOutput(node3, "Displacement")
+
+connection4 = node.Connection(-1)
+connections.append(connection4)
+connection4.assignInput(node5, "result")
+connection4.assignOutput(node1, "incandescence")
+
+connection5 = node.Connection(-1)
+connections.append(connection5)
+connection5.assignInput(node6, "result")
+connection5.assignOutput(node1, "Kd")
+
+connection6 = node.Connection(-1)
+connections.append(connection6)
+connection6.assignInput(node7, "result")
+connection6.assignOutput(node5, "freq")
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection1)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection2)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection3)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection4)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection5)
+
+arr = Arrow(self)
+arrows.append(arr)
+arr.assignConnection(connection6)
+
+group1 = Group(self)
+groups.append(group1)
+group1.AddPanel(node1.panel)
+group1.AddPanel(node5.panel)
+group1.AddPanel(node6.panel)
+
